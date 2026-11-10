@@ -1,17 +1,20 @@
-# หน้าเว็บขอจีบ ♡ (ธีมคุโรมิ)
+# หน้าเว็บขอจีบ ♡
 
-เว็บ static ล้วน ไฟล์เดียวจบ ไม่ต้อง build ไม่ต้องติดตั้งอะไร — HTML + CSS + JS ในไฟล์เดียว
+เว็บ static ล้วน ไฟล์เดียวจบ ไม่ต้อง build ไม่ต้องติดตั้งอะไร — HTML + CSS + JS อยู่ในไฟล์เดียว
 
 ## ลิงก์เว็บ
-- https://nawat2809-lang.github.io/date-invite/ — หน้าแรก (เวอร์ชันคุโรมิ โทนม่วง + หิมะตกเบา)
-- https://nawat2809-lang.github.io/date-invite/index-mymelody.html — เวอร์ชันมายเมโรดี้ (โทนชมพู)
+- https://nawat2809-lang.github.io/date-invite/ — หน้าแรก (มินิมอล + สติกเกอร์คุโรมิขยับได้)
+- https://nawat2809-lang.github.io/date-invite/index-kuromi-v2.html — ไฟล์เดียวกับหน้าแรก
+- https://nawat2809-lang.github.io/date-invite/index-kuromi.html — เวอร์ชันคุโรมิแบบการ์ดม่วง + หิมะ
+- https://nawat2809-lang.github.io/date-invite/index-mymelody.html — เวอร์ชันมายเมโรดี้ (ชมพูพาสเทล)
 - https://nawat2809-lang.github.io/date-invite/index-v1.html — เวอร์ชันแรก
 
 ## ไฟล์ที่มี
 | ไฟล์ | คำอธิบาย |
 | --- | --- |
-| `index.html` | หน้าแรกของเว็บ = เวอร์ชันคุโรมิ |
-| `index-kuromi.html` | ไฟล์เดียวกัน ใช้เป็นลิงก์ตรงได้ |
+| `index.html` | หน้าแรกของเว็บ = เวอร์ชันมินิมอล + สติกเกอร์ขยับ |
+| `index-kuromi-v2.html` | ไฟล์เดียวกัน ใช้เป็นลิงก์ตรงได้ |
+| `index-kuromi.html` | เวอร์ชันคุโรมิแบบการ์ดม่วง + หิมะตก |
 | `index-mymelody.html` | เวอร์ชันมายเมโรดี้ (โทนชมพูพาสเทล) |
 | `index-v1.html` | เวอร์ชันแรก |
 | `.nojekyll` | บอก GitHub Pages ว่าไม่ต้องประมวลผลด้วย Jekyll |
