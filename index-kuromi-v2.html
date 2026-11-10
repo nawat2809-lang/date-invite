@@ -100,25 +100,24 @@
     background:radial-gradient(closest-side, rgba(255,224,238,.85), rgba(238,226,250,.4) 62%, rgba(255,255,255,0) 100%);
     filter:blur(2px);
   }
-  .mascot{
-    position:relative;
-    width:100%; height:auto;
-    filter:drop-shadow(0 16px 20px rgba(96,70,96,.22));
-    animation:floaty 4.4s ease-in-out infinite;
-    transform-origin:50% 86%;
+  .gif{
+    position:absolute;
+    inset:0;
+    width:100%; height:100%;
+    object-fit:contain;
+    opacity:0;
+    transform:scale(.94) translateY(5px);
+    transition:opacity .5s ease, transform .5s ease;
+    filter:drop-shadow(0 14px 18px rgba(96,70,96,.18));
+    will-change:opacity;
   }
-  @media (prefers-reduced-motion:no-preference){
-    .mascot:hover{ animation-play-state:paused }
+  .gif.on{ opacity:1; transform:none }
+  .fallback{
+    position:absolute; inset:0;
+    display:grid; place-items:center;
+    font-size:clamp(2.4rem,10vw,3.4rem);
+    color:var(--pink-soft);
   }
-  .ear{ transform-box:fill-box; transform-origin:50% 94% }
-  .ear-l{ animation:earL 4.1s ease-in-out infinite }
-  .ear-r{ animation:earR 5.2s ease-in-out infinite }
-  .eyes{ transform-box:fill-box; transform-origin:50% 50%; animation:blinkEyes 5.4s infinite }
-  .shine{ animation:twinkle 2.6s ease-in-out infinite }
-  .shine-2{ animation-delay:-1.3s }
-  .skull{ transform-box:fill-box; transform-origin:50% 50%; animation:skullPulse 2.8s ease-in-out infinite }
-  .bow{ transform-box:fill-box; transform-origin:50% 50%; animation:bowWiggle 3.4s ease-in-out infinite }
-  .bow-r{ animation-delay:-1.7s }
 
   /* สติกเกอร์เล็ก ๆ ลอยรอบ ๆ */
   .st{
@@ -261,6 +260,12 @@
     font-size:.72rem;
     letter-spacing:.12em;
     color:rgba(182,165,176,.95);
+  }
+  .credit{
+    margin:.5em 0 0;
+    font-size:.62rem;
+    letter-spacing:.16em;
+    color:rgba(198,184,193,.85);
   }
 
   /* ---------------- step 2 ---------------- */
@@ -461,109 +466,10 @@
         <span class="st st-3" aria-hidden="true">✦</span>
         <span class="st st-4" aria-hidden="true">♡</span>
 
-        <!-- สติกเกอร์คุโรมิ (วาดเอง) ขยับได้ทั้งตัว -->
-        <svg class="mascot" viewBox="0 0 240 240" role="img"
-             aria-label="สติกเกอร์การ์ตูนกระต่ายฮู้ดสีเทาเข้ม มีตราหัวกะโหลกสีชมพู ตาโต และผูกโบว์ชมพูที่อุ้งมือ">
-          <defs>
-            <linearGradient id="vHood" x1=".2" y1="0" x2=".8" y2="1">
-              <stop offset="0" stop-color="#54495b" />
-              <stop offset=".55" stop-color="#3c3442" />
-              <stop offset="1" stop-color="#2c2533" />
-            </linearGradient>
-            <linearGradient id="vEar" x1=".5" y1="0" x2=".5" y2="1">
-              <stop offset="0" stop-color="#4a4051" />
-              <stop offset="1" stop-color="#2e2735" />
-            </linearGradient>
-            <linearGradient id="vFace" x1=".5" y1="0" x2=".5" y2="1">
-              <stop offset="0" stop-color="#ffffff" />
-              <stop offset="1" stop-color="#fbf7fd" />
-            </linearGradient>
-            <linearGradient id="vBow" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#ffb7d2" />
-              <stop offset="1" stop-color="#f270a4" />
-            </linearGradient>
-            <!-- ขอบสติกเกอร์สีขาวแบบ die-cut -->
-            <filter id="diecut" x="-25%" y="-25%" width="150%" height="150%">
-              <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="fat" />
-              <feFlood flood-color="#ffffff" result="white" />
-              <feComposite in="white" in2="fat" operator="in" result="ring" />
-              <feMerge>
-                <feMergeNode in="ring" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
-          <g filter="url(#diecut)">
-
-            <!-- pompom ปลายหู -->
-            <circle cx="72" cy="33" r="9" fill="url(#vEar)" />
-            <circle cx="168" cy="33" r="9" fill="url(#vEar)" />
-
-            <!-- หู -->
-            <g class="ear ear-l">
-              <path d="M84 98C68 76 60 46 68 30c7-14 24-11 30 4 7 18 9 44 6 64z" fill="url(#vEar)" />
-            </g>
-            <g class="ear ear-r">
-              <path d="M156 98c16-22 24-52 16-68-7-14-24-11-30 4-7 18-9 44-6 64z" fill="url(#vEar)" />
-            </g>
-
-            <!-- ฮู้ด -->
-            <path d="M120 54c40 0 67 27 67 64 0 40-29 65-67 65s-67-25-67-65c0-37 27-64 67-64z" fill="url(#vHood)" />
-
-            <!-- ตราหัวกะโหลก -->
-            <g class="skull" transform="translate(120,88)">
-              <path d="M0-13c8.6 0 15 6.1 15 14 0 5.2-2.4 8.8-6 10.8v4.2c0 1.6-1.3 2.9-2.9 2.9h-12.2C-7.7 18.9-9 17.6-9 16v-4.2C-12.6 9.8-15 6.2-15 1c0-7.9 6.4-14 15-14z" fill="#ffb7d2" />
-              <circle cx="-5.2" cy="-.6" r="3.1" fill="#3b2f42" />
-              <circle cx="5.2" cy="-.6" r="3.1" fill="#3b2f42" />
-              <path d="M-1.7 6.4l1.7 2.7 1.7-2.7z" fill="#3b2f42" />
-              <path d="M-5.4 12.6v4.2M0 12.6v4.2M5.4 12.6v4.2" stroke="#f270a4" stroke-width="1.3" stroke-linecap="round" />
-            </g>
-
-            <!-- หน้า -->
-            <ellipse cx="120" cy="136" rx="48" ry="42" fill="url(#vFace)" />
-
-            <!-- ตาโตเป็นประกาย -->
-            <g class="eyes">
-              <ellipse cx="101" cy="132" rx="15.5" ry="17.5" fill="#241f2b" />
-              <ellipse cx="139" cy="132" rx="15.5" ry="17.5" fill="#241f2b" />
-              <circle cx="95.5" cy="125" r="5.4" fill="#fff" />
-              <circle cx="133.5" cy="125" r="5.4" fill="#fff" />
-              <circle cx="106" cy="140" r="2.6" fill="#fff" opacity=".85" />
-              <circle cx="144" cy="140" r="2.6" fill="#fff" opacity=".85" />
-            </g>
-
-            <!-- แก้ม -->
-            <ellipse cx="83" cy="147" rx="8.5" ry="5" fill="#ffb7cc" opacity=".55" />
-            <ellipse cx="157" cy="147" rx="8.5" ry="5" fill="#ffb7cc" opacity=".55" />
-
-            <!-- ปาก -->
-            <path d="M114 152q6 5.4 12 0" fill="none" stroke="#8e7f95" stroke-width="2.2" stroke-linecap="round" />
-
-            <!-- อุ้งมือ + โบว์ -->
-            <ellipse cx="93" cy="184" rx="13" ry="10" fill="#ffffff" />
-            <ellipse cx="147" cy="184" rx="13" ry="10" fill="#ffffff" />
-            <g class="bow">
-              <path d="M83 178c-5-4-5-10 0-11 4-1 7 3 8 6-1 3-4 7-8 5z" fill="url(#vBow)" />
-              <path d="M103 178c5-4 5-10 0-11-4-1-7 3-8 6 1 3 4 7 8 5z" fill="url(#vBow)" />
-              <circle cx="93" cy="174" r="3.4" fill="#ffd9e6" />
-            </g>
-            <g class="bow bow-r">
-              <path d="M137 178c-5-4-5-10 0-11 4-1 7 3 8 6-1 3-4 7-8 5z" fill="url(#vBow)" />
-              <path d="M157 178c5-4 5-10 0-11-4-1-7 3-8 6 1 3 4 7 8 5z" fill="url(#vBow)" />
-              <circle cx="147" cy="174" r="3.4" fill="#ffd9e6" />
-            </g>
-
-            <!-- ประกายในตา -->
-            <g class="shine shine-1">
-              <path d="M172 74l3.4 7.6 7.6 3.4-7.6 3.4-3.4 7.6-3.4-7.6-7.6-3.4 7.6-3.4z" fill="#ffffff" opacity=".95" />
-            </g>
-            <g class="shine shine-2">
-              <path d="M62 62l2.6 5.8 5.8 2.6-5.8 2.6-2.6 5.8-2.6-5.8-5.8-2.6 5.8-2.6z" fill="#ffffff" opacity=".85" />
-            </g>
-
-          </g>
-        </svg>
+        <!-- GIF คุโรมิ (Tenor) สลับอารมณ์ไปเรื่อย ๆ -->
+        <img class="gif on" id="gifA" src="img/kuromi/happy.gif" alt="คุโรมิยิ้มหวาน" decoding="async" />
+        <img class="gif" id="gifB" src="img/kuromi/aegyo.gif" alt="" aria-hidden="true" decoding="async" />
+        <span class="fallback" id="gifFallback" hidden aria-hidden="true">💜</span>
       </div>
 
       <h1 id="ask-title">ขอ<span class="accent">จีบ</span>ได้มั้ย ♡</h1>
@@ -580,6 +486,7 @@
 
       <p class="toast" id="toast" role="status" aria-live="polite"></p>
       <p class="sign">ผู้ต้องสงสัย: พี่เชอ ♡</p>
+      <p class="credit">gif: tenor.com</p>
     </div>
   </section>
 
@@ -802,6 +709,68 @@
     }
   })();
 
+  /* ================= GIF moods (สติกเกอร์คุโรมิสลับอารมณ์) ================= */
+  var MOODS = [
+    { key: 'happy',  src: 'img/kuromi/happy.gif',  alt: 'คุโรมิยิ้มหวาน' },
+    { key: 'cry',    src: 'img/kuromi/cry.gif',    alt: 'คุโรมิร้องไห้' },
+    { key: 'aegyo',  src: 'img/kuromi/aegyo.gif',  alt: 'คุโรมิอ้อน' },
+    { key: 'laugh',  src: 'img/kuromi/laugh.gif',  alt: 'คุโรมิหัวเราะ' },
+    { key: 'smug',   src: 'img/kuromi/smug.gif',   alt: 'คุโรมิทำหน้านิ่ง' },
+    { key: 'tease',  src: 'img/kuromi/tease.gif',  alt: 'คุโรมิเล่นมือถือ' }
+  ];
+  var gifA = $('#gifA'), gifB = $('#gifB'), gifFallback = $('#gifFallback');
+  var front = gifA, back = gifB;
+  var moodIndex = 0, moodTimer = null, moodHold = null;
+  var CYCLE = 3800;
+
+  MOODS.forEach(function (m) { var i = new Image(); i.src = m.src; });
+
+  function paint(mood) {
+    if (front.getAttribute('data-mood') === mood.key) return;
+    back.setAttribute('data-mood', mood.key);
+    back.alt = mood.alt;
+    var reveal = function () {
+      back.classList.add('on');
+      front.classList.remove('on');
+      var t = front; front = back; back = t;
+    };
+    back.src = mood.src;
+    if (back.complete && back.naturalWidth) reveal();
+    else back.addEventListener('load', reveal, { once: true });
+  }
+
+  function startCycle() {
+    clearInterval(moodTimer);
+    moodTimer = setInterval(function () {
+      moodIndex = (moodIndex + 1) % MOODS.length;
+      paint(MOODS[moodIndex]);
+    }, CYCLE);
+  }
+
+  function setMood(key, holdMs) {
+    for (var i = 0; i < MOODS.length; i++) {
+      if (MOODS[i].key === key) {
+        moodIndex = i;
+        paint(MOODS[i]);
+        break;
+      }
+    }
+    clearInterval(moodTimer);
+    clearTimeout(moodHold);
+    moodHold = setTimeout(startCycle, holdMs || 5200);
+  }
+
+  [gifA, gifB].forEach(function (img) {
+    img.addEventListener('error', function () {
+      img.classList.remove('on');
+      gifFallback.hidden = false;
+    });
+  });
+
+  gifA.setAttribute('data-mood', 'happy');
+  gifB.setAttribute('data-mood', 'aegyo');
+  startCycle();
+
   /* ================= screens ================= */
   var screens = {
     ask: $('#screen-ask'),
@@ -907,6 +876,7 @@
     yes.style.setProperty('--grow', (1 + dodges * 0.035).toFixed(3));
     flash(toast, TAUNTS[Math.min(dodges - 1, TAUNTS.length - 1)]);
     sfx.dodge();
+    setMood('smug', 2400);
 
     if (dodges >= MAX) {
       no.classList.add('yielded');
@@ -1004,6 +974,7 @@
     var r = yes.getBoundingClientRect();
     burst(r.left + r.width / 2, r.top + r.height / 2, 44, 1.1);
     sfx.chime();
+    setMood('happy', 4200);
     show('plan');
 
     setTimeout(function () {
@@ -1067,6 +1038,7 @@
     show('done');
     typeInto(finalEl, msg, 32);
     sfx.chime();
+    setMood('laugh', 5200);
 
     setTimeout(function () { burst(window.innerWidth / 2, window.innerHeight * 0.32, 64, 1.35); }, 60);
     setTimeout(function () { burst(window.innerWidth * 0.2, window.innerHeight * 0.5, 22, 0.85); }, 420);
@@ -1102,6 +1074,7 @@
     note.classList.remove('show');
 
     sfx.tap();
+    setMood('aegyo', 4200);
     show('ask');
   });
 
