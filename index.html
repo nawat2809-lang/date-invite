@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>ขอจีบได้มั้ย ♡</title>
-<meta name="description" content="คำถามเล็ก ๆ ที่กล้า ๆ กลัว ๆ … ขอจีบได้มั้ย ♡" />
-<meta name="theme-color" content="#fff7f2" />
-<meta property="og:title" content="ขอจีบได้มั้ย ♡" />
-<meta property="og:description" content="ไม่ได้อยากรีบร้อน แต่อยากทำความรู้จักมากขึ้น" />
+<title>อยากเป็นคนพิเศษของพี่ชมพูพิ้งค์ได้ไหม? ♡</title>
+<meta name="description" content="ถ้าเป็นไปได้..... อยากมีประตูวิเศษเปิดเข้าไปในใจพี่ชมพูพิ้งค์จัง ♡" />
+<meta name="theme-color" content="#fff5fa" />
+<meta property="og:title" content="อยากเป็นคนพิเศษของพี่ชมพูพิ้งค์ได้ไหม? ♡" />
+<meta property="og:description" content="ถ้าเป็นไปได้..... อยากมีประตูวิเศษเปิดเข้าไปในใจพี่ชมพูพิ้งค์จัง" />
 <meta property="og:type" content="website" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,15 +16,15 @@
   *,*::before,*::after{ box-sizing:border-box }
 
   :root{
-    --cream:#fff7f2;
-    --blush:#ffd9e3;
-    --rose:#df5570;
-    --rose-deep:#b93e5c;
-    --rose-soft:#f690a8;
-    --ink:#43242d;
-    --ink-soft:#8a636d;
-    --gold:#d9a86c;
-    --card:rgba(255,255,255,.74);
+    --cream:#fff6fb;
+    --blush:#ffd6e7;
+    --rose:#e0669b;
+    --rose-deep:#c24a7e;
+    --rose-soft:#ff9ec5;
+    --lilac:#e9dcff;
+    --ink:#4a2b3d;
+    --ink-soft:#8d6c80;
+    --card:rgba(255,255,255,.78);
   }
 
   html,body{ height:100% }
@@ -40,9 +40,9 @@
     -webkit-font-smoothing:antialiased;
     text-rendering:optimizeLegibility;
     background:
-      radial-gradient(120% 90% at 12% 0%, #fff1f4 0%, rgba(255,241,244,0) 55%),
-      radial-gradient(100% 80% at 92% 8%, #ffe9df 0%, rgba(255,233,223,0) 60%),
-      radial-gradient(130% 100% at 50% 112%, #ffe3ea 0%, rgba(255,227,234,0) 65%),
+      radial-gradient(120% 90% at 10% 0%, #fff0f7 0%, rgba(255,240,247,0) 55%),
+      radial-gradient(100% 80% at 94% 6%, #f5edff 0%, rgba(245,237,255,0) 60%),
+      radial-gradient(130% 100% at 50% 112%, #ffe6f1 0%, rgba(255,230,241,0) 65%),
       var(--cream);
     overflow-x:hidden;
   }
@@ -71,12 +71,12 @@
   .card{
     position:relative;
     text-align:center;
-    padding:clamp(26px,6vw,58px) clamp(20px,5.4vw,52px) clamp(22px,5vw,44px);
-    border-radius:clamp(22px,4vw,34px);
-    border:1px solid rgba(223,85,112,.14);
+    padding:clamp(24px,5.4vw,50px) clamp(18px,5vw,50px) clamp(22px,5vw,44px);
+    border-radius:clamp(24px,4.4vw,38px);
+    border:1px solid rgba(224,102,155,.16);
     background:var(--card);
     box-shadow:
-      0 34px 70px -34px rgba(185,62,92,.38),
+      0 34px 70px -34px rgba(194,74,126,.36),
       0 1px 0 rgba(255,255,255,.9) inset;
     backdrop-filter:blur(14px);
     -webkit-backdrop-filter:blur(14px);
@@ -85,19 +85,19 @@
   .deco{
     position:absolute;
     font-size:clamp(15px,3.4vw,20px);
-    color:rgba(223,85,112,.4);
+    color:rgba(224,102,155,.42);
     animation:bob 5s ease-in-out infinite;
     pointer-events:none;
     user-select:none;
   }
   .deco-tl{ top:16px; left:20px }
   .deco-tr{ top:16px; right:20px; animation-delay:-1.4s }
-  .deco-bl{ bottom:14px; left:22px; animation-delay:-2.6s; color:rgba(217,168,108,.55) }
-  .deco-br{ bottom:14px; right:22px; animation-delay:-3.7s; color:rgba(217,168,108,.55) }
+  .deco-bl{ bottom:14px; left:22px; animation-delay:-2.6s; color:rgba(174,146,222,.6) }
+  .deco-br{ bottom:14px; right:22px; animation-delay:-3.7s; color:rgba(174,146,222,.6) }
 
   .badge{
-    margin:0 0 clamp(14px,3vw,22px);
-    font-size:.68rem;
+    margin:0 0 clamp(8px,2vw,14px);
+    font-size:.66rem;
     letter-spacing:.28em;
     text-transform:uppercase;
     color:var(--rose);
@@ -105,19 +105,49 @@
   }
   .badge::before,.badge::after{
     content:''; height:1px; width:clamp(18px,7vw,46px);
-    background:linear-gradient(90deg, rgba(223,85,112,0), rgba(223,85,112,.55));
+    background:linear-gradient(90deg, rgba(224,102,155,0), rgba(224,102,155,.55));
   }
   .badge::after{ transform:scaleX(-1) }
+
+  /* ---------- mascot ---------- */
+  .mascot-wrap{
+    position:relative;
+    width:min(232px, 58vw);
+    margin:0 auto clamp(6px,1.6vw,12px);
+  }
+  .mascot{
+    display:block; width:100%; height:auto;
+    filter:drop-shadow(0 20px 26px rgba(214,110,160,.3));
+    animation:mascotFloat 4.4s ease-in-out infinite;
+  }
+  .ear{ transform-box:fill-box; transform-origin:50% 100% }
+  .ear-l{ animation:earSway 4.8s ease-in-out infinite }
+  .ear-r{ animation:earSway 5.6s ease-in-out infinite reverse }
+  .eyes{ transform-box:fill-box; transform-origin:50% 50%; animation:blinkEye 5.6s infinite }
+  .held-heart{ transform-box:fill-box; transform-origin:50% 50%; animation:heartPulse 1.9s ease-in-out infinite }
+
+  .spark{
+    position:absolute;
+    font-size:clamp(12px,3vw,17px);
+    color:var(--rose-soft);
+    animation:twinkle 3.4s ease-in-out infinite;
+    pointer-events:none;
+    user-select:none;
+  }
+  .spark-1{ top:6%; left:-2%; animation-delay:-.4s }
+  .spark-2{ top:24%; right:-4%; animation-delay:-1.6s; color:#c9a7ee }
+  .spark-3{ bottom:12%; left:-6%; animation-delay:-2.4s; color:#c9a7ee }
+  .spark-4{ bottom:2%; right:0%; animation-delay:-3.1s }
 
   h1{
     font-family:'Mali', 'IBM Plex Sans Thai', cursive;
     font-weight:600;
-    font-size:clamp(2.5rem,9vw,4.3rem);
-    line-height:1.22;
-    letter-spacing:-.01em;
-    margin:.1em 0 .35em;
+    font-size:clamp(1.62rem,6.1vw,2.5rem);
+    line-height:1.4;
+    letter-spacing:-.005em;
+    margin:.12em 0 .5em;
     padding-bottom:.06em;
-    background:linear-gradient(160deg,#b93e5c 0%, #df5570 46%, #e8849c 100%);
+    background:linear-gradient(160deg,#c24a7e 0%, #e0669b 48%, #ef8fbb 100%);
     -webkit-background-clip:text; background-clip:text;
     color:transparent; -webkit-text-fill-color:transparent;
   }
@@ -125,8 +155,8 @@
   h2{
     font-family:'Mali', 'IBM Plex Sans Thai', cursive;
     font-weight:600;
-    font-size:clamp(1.55rem,5.4vw,2.2rem);
-    line-height:1.35;
+    font-size:clamp(1.5rem,5.2vw,2.1rem);
+    line-height:1.4;
     color:var(--rose-deep);
     margin:.1em 0 .6em;
   }
@@ -135,20 +165,20 @@
     margin:0 auto;
     max-width:34ch;
     font-weight:300;
-    font-size:clamp(.98rem,2.9vw,1.08rem);
+    font-size:clamp(.97rem,2.9vw,1.07rem);
     line-height:2;
     color:var(--ink-soft);
   }
   .lead em{
     font-style:normal; font-weight:500; color:var(--rose-deep);
-    background:linear-gradient(transparent 62%, rgba(255,192,208,.85) 62%);
+    background:linear-gradient(transparent 62%, rgba(255,196,220,.9) 62%);
   }
 
   .hint{
-    margin:clamp(18px,3.4vw,26px) 0 0;
-    font-size:.86rem;
+    margin:clamp(16px,3.4vw,24px) 0 0;
+    font-size:.85rem;
     letter-spacing:.02em;
-    color:rgba(138,99,109,.9);
+    color:rgba(141,108,128,.92);
   }
 
   .progress{
@@ -161,17 +191,17 @@
   /* ---------- buttons ---------- */
   .choices{
     display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
-    gap:clamp(10px,2.4vw,14px);
-    margin-top:clamp(20px,4vw,30px);
+    gap:clamp(9px,2.2vw,13px);
+    margin-top:clamp(16px,3.6vw,26px);
   }
   .no-slot{ display:inline-flex }
 
   .btn{
     font:inherit;
-    font-size:clamp(.96rem,2.6vw,1.05rem);
+    font-size:clamp(.92rem,2.5vw,1.02rem);
     font-weight:500;
     line-height:1.25;
-    padding:.9em 1.85em;
+    padding:.88em 1.6em;
     border-radius:999px;
     border:1.5px solid transparent;
     cursor:pointer;
@@ -183,22 +213,22 @@
 
   .btn.primary{
     color:#fff;
-    background:linear-gradient(135deg,#e8607d 0%, #cb4a6b 58%, #b93e5c 100%);
-    box-shadow:0 16px 30px -14px rgba(185,62,92,.8), 0 1px 0 rgba(255,255,255,.4) inset;
+    background:linear-gradient(135deg,#ef7fae 0%, #dd5f95 58%, #c24a7e 100%);
+    box-shadow:0 16px 30px -14px rgba(194,74,126,.78), 0 1px 0 rgba(255,255,255,.4) inset;
     transform:scale(var(--grow,1));
   }
-  .btn.primary:hover{ transform:translateY(-3px) scale(var(--grow,1)); filter:brightness(1.06) }
+  .btn.primary:hover{ transform:translateY(-3px) scale(var(--grow,1)); filter:brightness(1.05) }
   .btn.primary:active{ transform:translateY(0) scale(calc(var(--grow,1) * .97)) }
 
   .btn.ghost{
     color:var(--rose-deep);
-    background:rgba(255,255,255,.62);
-    border-color:rgba(223,85,112,.34);
+    background:rgba(255,255,255,.7);
+    border-color:rgba(224,102,155,.34);
   }
-  .btn.ghost:hover{ background:#fff; border-color:rgba(223,85,112,.62); transform:translateY(-2px) }
+  .btn.ghost:hover{ background:#fff; border-color:rgba(224,102,155,.6); transform:translateY(-2px) }
 
   .btn:focus-visible{
-    outline:2px solid rgba(185,62,92,.55);
+    outline:2px solid rgba(194,74,126,.55);
     outline-offset:3px;
   }
 
@@ -207,22 +237,22 @@
     position:fixed;
     z-index:20;
     margin:0;
-    transition:transform .46s cubic-bezier(.34,1.6,.5,1), background .26s, color .26s, border-color .26s, box-shadow .26s;
+    transition:transform .42s cubic-bezier(.34,1.5,.5,1), background .26s, color .26s, border-color .26s, box-shadow .26s;
     will-change:transform;
   }
   .btn.escaped.yielded{
-    background:linear-gradient(135deg,#ffe6ec, #ffcfdd);
+    background:linear-gradient(135deg,#ffe7f1, #ffd0e4);
     color:var(--rose-deep);
-    border-color:rgba(223,85,112,.5);
-    box-shadow:0 12px 26px -16px rgba(185,62,92,.7);
+    border-color:rgba(224,102,155,.5);
+    box-shadow:0 12px 26px -16px rgba(194,74,126,.7);
     animation:pulse-soft 2.2s ease-out infinite;
   }
 
   /* ---------- messages ---------- */
   .toast,.note{
     min-height:1.55em;
-    margin:clamp(12px,2.4vw,16px) 0 0;
-    font-size:.88rem;
+    margin:clamp(10px,2.2vw,14px) 0 0;
+    font-size:.87rem;
     color:var(--ink-soft);
     opacity:0;
     transform:translateY(-4px);
@@ -231,19 +261,19 @@
   .toast.show,.note.show{ opacity:1; transform:none }
 
   .sign{
-    margin:clamp(16px,3vw,26px) 0 0;
+    margin:clamp(14px,3vw,24px) 0 0;
     font-size:.74rem;
-    letter-spacing:.14em;
-    color:rgba(138,99,109,.72);
+    letter-spacing:.1em;
+    color:rgba(141,108,128,.75);
   }
 
   /* ---------- step 2 ---------- */
   .type{
-    margin:0 auto .2em;
-    min-height:3.4em;
-    max-width:36ch;
+    margin:0 auto;
+    min-height:3.6em;
+    max-width:38ch;
     font-size:clamp(1rem,2.9vw,1.1rem);
-    line-height:1.7;
+    line-height:1.85;
     font-weight:400;
     color:var(--ink);
   }
@@ -262,7 +292,7 @@
   .sub{
     margin:clamp(12px,2.4vw,16px) auto 0;
     max-width:36ch;
-    font-size:.9rem;
+    font-size:.89rem;
     font-weight:300;
     line-height:1.95;
     color:var(--ink-soft);
@@ -278,43 +308,43 @@
   .chip{
     position:relative;
     font:inherit;
-    font-size:.9rem;
+    font-size:.89rem;
     line-height:1.3;
-    padding:.6em 1.05em;
+    padding:.62em 1.05em;
     border-radius:999px;
-    border:1.5px solid rgba(223,85,112,.24);
-    background:rgba(255,255,255,.66);
+    border:1.5px solid rgba(224,102,155,.24);
+    background:rgba(255,255,255,.7);
     color:var(--ink);
     cursor:pointer;
     -webkit-tap-highlight-color:transparent;
     touch-action:manipulation;
     transition:transform .22s cubic-bezier(.2,.85,.2,1), background .22s, border-color .22s, color .22s, box-shadow .22s;
   }
-  .chip:hover{ transform:translateY(-2px); background:#fff; border-color:rgba(223,85,112,.45) }
+  .chip:hover{ transform:translateY(-2px); background:#fff; border-color:rgba(224,102,155,.45) }
   .chip[aria-pressed="true"]{
-    background:linear-gradient(135deg,#ffe4ec, #ffd0dd);
-    border-color:rgba(223,85,112,.55);
+    background:linear-gradient(135deg,#ffe5f0, #ffd1e4);
+    border-color:rgba(224,102,155,.55);
     color:var(--rose-deep);
-    box-shadow:0 10px 20px -14px rgba(185,62,92,.9);
+    box-shadow:0 10px 20px -14px rgba(194,74,126,.9);
   }
-  .chip:focus-visible{ outline:2px solid rgba(185,62,92,.5); outline-offset:2px }
+  .chip:focus-visible{ outline:2px solid rgba(194,74,126,.5); outline-offset:2px }
 
   /* ---------- final ---------- */
   .bigheart{
-    font-size:clamp(3.4rem,13vw,5rem);
+    font-size:clamp(3.2rem,12vw,4.8rem);
     line-height:1;
     margin:0 0 .18em;
     color:var(--rose);
     animation:beat 1.8s ease-in-out infinite;
-    text-shadow:0 16px 34px rgba(185,62,92,.35);
+    text-shadow:0 16px 34px rgba(194,74,126,.32);
   }
   .final-line{
     min-height:1.8em;
     margin:0 auto;
-    max-width:34ch;
+    max-width:36ch;
     font-family:'Mali', 'IBM Plex Sans Thai', cursive;
-    font-size:clamp(1.05rem,3.4vw,1.3rem);
-    line-height:1.6;
+    font-size:clamp(1rem,3.2vw,1.22rem);
+    line-height:1.7;
     color:var(--rose-deep);
   }
 
@@ -325,16 +355,16 @@
     display:grid; place-items:center;
     font-size:1rem;
     color:var(--rose-deep);
-    background:rgba(255,255,255,.72);
-    border:1px solid rgba(223,85,112,.22);
+    background:rgba(255,255,255,.76);
+    border:1px solid rgba(224,102,155,.22);
     border-radius:50%;
     cursor:pointer;
     -webkit-tap-highlight-color:transparent;
-    box-shadow:0 10px 22px -16px rgba(185,62,92,.9);
+    box-shadow:0 10px 22px -16px rgba(194,74,126,.9);
     transition:transform .2s, background .2s;
   }
   .sound:hover{ transform:scale(1.06); background:#fff }
-  .sound.muted{ color:rgba(138,99,109,.55) }
+  .sound.muted{ color:rgba(141,108,128,.55) }
   .sound.muted::after{
     content:'';
     position:absolute; width:60%; height:1.5px;
@@ -350,7 +380,7 @@
   @keyframes drift{
     0%{ transform:translateY(0) rotate(0deg); opacity:0 }
     8%{ opacity:.5 }
-    85%{ opacity:.32 }
+    85%{ opacity:.3 }
     100%{ transform:translateY(-118vh) rotate(200deg); opacity:0 }
   }
   @keyframes bob{
@@ -365,9 +395,9 @@
     54%{ transform:scale(1.06) }
   }
   @keyframes pulse-soft{
-    0%{ box-shadow:0 0 0 0 rgba(223,85,112,.42) }
-    70%{ box-shadow:0 0 0 16px rgba(223,85,112,0) }
-    100%{ box-shadow:0 0 0 0 rgba(223,85,112,0) }
+    0%{ box-shadow:0 0 0 0 rgba(224,102,155,.42) }
+    70%{ box-shadow:0 0 0 16px rgba(224,102,155,0) }
+    100%{ box-shadow:0 0 0 0 rgba(224,102,155,0) }
   }
   @keyframes shake{
     0%,100%{ transform:translateX(0) }
@@ -376,10 +406,31 @@
     60%{ transform:translateX(-4px) }
     80%{ transform:translateX(3px) }
   }
+  @keyframes mascotFloat{
+    0%,100%{ transform:translateY(0) rotate(-1.2deg) }
+    50%{ transform:translateY(-9px) rotate(1.2deg) }
+  }
+  @keyframes earSway{
+    0%,100%{ transform:rotate(-3deg) }
+    50%{ transform:rotate(-11deg) }
+  }
+  @keyframes blinkEye{
+    0%, 87%, 100%{ transform:scaleY(1) }
+    92%{ transform:scaleY(.12) }
+    96%{ transform:scaleY(1) }
+  }
+  @keyframes heartPulse{
+    0%,100%{ transform:scale(1) }
+    45%{ transform:scale(1.09) }
+  }
+  @keyframes twinkle{
+    0%,100%{ opacity:.15; transform:scale(.72) rotate(-6deg) }
+    50%{ opacity:1; transform:scale(1) rotate(6deg) }
+  }
 
   @media (max-width:400px){
-    .btn{ padding:.85em 1.5em }
-    .lead{ font-size:.95rem }
+    .btn{ padding:.82em 1.3em }
+    .lead{ font-size:.94rem }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -404,21 +455,102 @@
       <span class="deco deco-bl" aria-hidden="true">✦</span>
       <span class="deco deco-br" aria-hidden="true">♡</span>
 
-      <p class="badge">A little question for you</p>
-      <h1 id="ask-title">ขอจีบได้มั้ย</h1>
-      <p class="lead">ไม่ได้อยากรีบร้อน<br />แต่อยากทำความรู้จักมากขึ้น<br />อยากทำให้ทุกวันของ<em>พี่</em>ยิ้มได้ ♡</p>
+      <p class="badge">A little wish for you</p>
+
+      <!-- ตัวการ์ตูนธีมชมพูพาสเทล (วาดเองด้วย SVG) -->
+      <div class="mascot-wrap">
+        <span class="spark spark-1" aria-hidden="true">♡</span>
+        <span class="spark spark-2" aria-hidden="true">✧</span>
+        <span class="spark spark-3" aria-hidden="true">✦</span>
+        <span class="spark spark-4" aria-hidden="true">♡</span>
+
+        <svg class="mascot" viewBox="0 0 240 240" role="img"
+             aria-label="ตัวการ์ตูนกระต่ายหูกระต่ายสวมฮู้ดสีชมพูถือหัวใจ">
+          <defs>
+            <linearGradient id="mmHood" x1="0.15" y1="0" x2="0.85" y2="1">
+              <stop offset="0" stop-color="#ffd8e7" />
+              <stop offset="0.55" stop-color="#ffbcd7" />
+              <stop offset="1" stop-color="#f79dc4" />
+            </linearGradient>
+            <linearGradient id="mmFace" x1="0.5" y1="0" x2="0.5" y2="1">
+              <stop offset="0" stop-color="#ffffff" />
+              <stop offset="1" stop-color="#fff2f8" />
+            </linearGradient>
+            <radialGradient id="mmHalo" cx="0.5" cy="0.45" r="0.55">
+              <stop offset="0" stop-color="#fff0f7" stop-opacity="0.95" />
+              <stop offset="1" stop-color="#fff0f7" stop-opacity="0" />
+            </radialGradient>
+          </defs>
+
+          <circle cx="120" cy="124" r="106" fill="url(#mmHalo)" />
+
+          <!-- ears -->
+          <g class="ear ear-l">
+            <ellipse cx="89" cy="48" rx="17" ry="34" fill="url(#mmHood)" stroke="#f18fb8" stroke-width="1.6" />
+            <ellipse cx="89" cy="50" rx="8.5" ry="22" fill="#ffe2ee" />
+          </g>
+          <g class="ear ear-r">
+            <ellipse cx="151" cy="48" rx="17" ry="34" fill="url(#mmHood)" stroke="#f18fb8" stroke-width="1.6" />
+            <ellipse cx="151" cy="50" rx="8.5" ry="22" fill="#ffe2ee" />
+          </g>
+
+          <!-- hood -->
+          <ellipse cx="120" cy="120" rx="66" ry="61" fill="url(#mmHood)" stroke="#f18fb8" stroke-width="1.6" />
+
+          <!-- face -->
+          <ellipse cx="120" cy="129" rx="48" ry="44" fill="url(#mmFace)" />
+
+          <!-- bow -->
+          <g transform="translate(58,86) rotate(-12)">
+            <path d="M0 0c-14-12-31-10-31 4s17 16 31 4z" fill="#ff9ec5" stroke="#ef80ae" stroke-width="1.3" />
+            <path d="M0 0c14-12 31-10 31 4s-17 16-31 4z" fill="#ff9ec5" stroke="#ef80ae" stroke-width="1.3" />
+            <circle cx="0" cy="4" r="7.5" fill="#ffc6dd" stroke="#ef80ae" stroke-width="1.3" />
+            <circle cx="-17" cy="1" r="2.4" fill="#ffffff" opacity="0.9" />
+            <circle cx="17" cy="5" r="2.4" fill="#ffffff" opacity="0.9" />
+            <circle cx="-6" cy="8" r="1.8" fill="#ffffff" opacity="0.8" />
+            <circle cx="7" cy="1" r="1.8" fill="#ffffff" opacity="0.8" />
+          </g>
+
+          <!-- eyes -->
+          <g class="eyes">
+            <ellipse cx="101" cy="127" rx="6" ry="7.6" fill="#4b2a3a" />
+            <ellipse cx="139" cy="127" rx="6" ry="7.6" fill="#4b2a3a" />
+            <circle cx="103.2" cy="123.6" r="1.9" fill="#ffffff" />
+            <circle cx="141.2" cy="123.6" r="1.9" fill="#ffffff" />
+          </g>
+
+          <!-- blush -->
+          <ellipse cx="84" cy="142" rx="9" ry="5.4" fill="#ffb3cc" opacity="0.72" />
+          <ellipse cx="156" cy="142" rx="9" ry="5.4" fill="#ffb3cc" opacity="0.72" />
+
+          <!-- mouth -->
+          <path d="M113 145q7 7 14 0" fill="none" stroke="#c9809e" stroke-width="2.3" stroke-linecap="round" />
+
+          <!-- heart in hands -->
+          <ellipse cx="96" cy="183" rx="11.5" ry="9" fill="#fff7fb" stroke="#f4cfe0" stroke-width="1.3" />
+          <ellipse cx="144" cy="183" rx="11.5" ry="9" fill="#fff7fb" stroke="#f4cfe0" stroke-width="1.3" />
+          <g class="held-heart">
+            <path d="M120 201c-13-10-22-17-22-25 0-6 4.6-9.6 10.4-9.6 4.6 0 8.4 2.6 11.6 7.4 3.2-4.8 7-7.4 11.6-7.4 5.8 0 10.4 3.6 10.4 9.6 0 8-9 15-22 25z"
+                  fill="#ff7fa9" stroke="#ef6d99" stroke-width="1.5" />
+            <ellipse cx="110" cy="176" rx="3.4" ry="2.4" fill="#ffffff" opacity="0.7" transform="rotate(-20 110 176)" />
+          </g>
+        </svg>
+      </div>
+
+      <h1 id="ask-title">อยากเป็นคนพิเศษ<br />ของพี่ชมพูพิ้งค์ได้ไหม?</h1>
+      <p class="lead">ถ้าเป็นไปได้.....<br />อยากมีประตูวิเศษเปิดเข้าไป<br />ในใจ<em>พี่ชมพูพิ้งค์</em>จัง ♡</p>
 
       <p class="hint" id="hint">ลองเลือกคำตอบดูสิ ♡</p>
 
       <div class="choices">
-        <button class="btn primary" id="yes" type="button">♡ จีบหน่อยได้ไหม</button>
+        <button class="btn primary" id="yes" type="button">คุยกันก่อนนะ</button>
         <span class="no-slot" id="noSlot">
-          <button class="btn ghost" id="no" type="button">ไม่ให้จีบ</button>
+          <button class="btn ghost" id="no" type="button">ขอเป็นเพื่อนก่อนนะ</button>
         </span>
       </div>
 
       <p class="toast" id="toast" role="status" aria-live="polite"></p>
-      <p class="sign">— น้องหมาซามอย</p>
+      <p class="sign">— จากคนที่อยากเป็นคนพิเศษของพี่ ♡</p>
     </div>
   </section>
 
@@ -429,17 +561,17 @@
       <span class="deco deco-br" aria-hidden="true">✧</span>
 
       <p class="progress">ขั้นที่ 2 จาก 2</p>
-      <h2 id="plan-title">ดีใจจังเลย ♡</h2>
+      <h2 id="plan-title">ดีใจจังที่พี่ยอมคุยด้วย</h2>
       <p class="type" id="type"></p>
-      <p class="sub">ถ้าพี่ไม่รังเกียจ เลือกสิ่งที่อยากให้เริ่มก่อนได้เลย<br />เลือกได้หลายอย่างนะ</p>
+      <p class="sub">ถ้าได้เจอกัน เลือกอย่างแรกที่อยากทำด้วยกันได้เลย<br />เลือกได้หลายอย่างนะ ♡</p>
 
       <div class="chips" id="chips">
         <button class="chip" type="button" aria-pressed="false" data-label="พาไปกินของอร่อย">🍜 พาไปกินของอร่อย</button>
         <button class="chip" type="button" aria-pressed="false" data-label="ดูหนังด้วยกัน">🎬 ดูหนังด้วยกัน</button>
-        <button class="chip" type="button" aria-pressed="false" data-label="เดินเล่นคุยกันเรื่อยเปื่อย">🌙 เดินเล่นคุยกัน</button>
-        <button class="chip" type="button" aria-pressed="false" data-label="ส่งเพลงให้ฟังทุกวัน">🎧 ส่งเพลงให้ฟัง</button>
-        <button class="chip" type="button" aria-pressed="false" data-label="ถ่ายรูปคู่กันสักรูป">📷 ถ่ายรูปคู่กัน</button>
-        <button class="chip" type="button" aria-pressed="false" data-label="แค่คุยกันทุกวันก็พอ">♡ แค่คุยกันทุกวัน</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="เดินเล่นคุยกัน">🌙 เดินเล่นคุยกัน</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="ถ่ายรูปคู่กัน">📷 ถ่ายรูปคู่กัน</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="คุยกันเหมือนเดิมเรื่อยเปื่อย">☕ คุยกันเหมือนเดิมเรื่อยเปื่อย</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="ไปร้องเพลงกัน">🎤 ไปร้องเพลงกัน</button>
       </div>
 
       <p class="note" id="note" role="status" aria-live="polite"></p>
@@ -460,7 +592,7 @@
 
       <div class="bigheart" aria-hidden="true">♥</div>
       <p class="progress">จากนี้ไป</p>
-      <h2 id="done-title">ขอบคุณนะ พี่ ♡</h2>
+      <h2 id="done-title">ขอบคุณนะ พี่ชมพูพิ้งค์ ♡</h2>
       <p class="final-line" id="finalLine"></p>
       <p class="sub">เก็บความกล้าครั้งนี้ไว้ในกระเป๋าเสื้อแล้ว<br />แล้วเจอกันนะ ♡</p>
 
@@ -517,8 +649,8 @@
   }
 
   var sfx = {
-    tap: function () { tone(760, 0.1, 'sine', 0.028); },
-    dodge: function () { tone(320, 0.1, 'square', 0.024); tone(430, 0.11, 'triangle', 0.022, 0.05); },
+    tap: function () { tone(780, 0.1, 'sine', 0.028); },
+    dodge: function () { tone(360, 0.1, 'square', 0.022); tone(470, 0.11, 'triangle', 0.02, 0.05); },
     chime: function () {
       tone(659.25, 0.55, 'sine', 0.042);
       tone(987.77, 0.6, 'sine', 0.03, 0.08);
@@ -531,7 +663,7 @@
   var g = cv.getContext('2d');
   var W = 0, H = 0, DPR = 1, running = false;
   var parts = [];
-  var PALETTE = ['#df5570', '#f690a8', '#ffb3c6', '#d9a86c', '#ffd0dd', '#e8607d'];
+  var PALETTE = ['#e0669b', '#ff9ec5', '#ffc4dd', '#c9a7ee', '#ffd0e4', '#ef7fae'];
 
   function sizeCanvas() {
     DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -635,7 +767,7 @@
     if (reduce) return;
     var layer = $('#floaters');
     var glyphs = ['♡', '♥', '✧', '✦', '❥'];
-    var colors = ['#f690a8', '#ffb3c6', '#d9a86c', '#e8607d'];
+    var colors = ['#ff9ec5', '#ffc4dd', '#c9a7ee', '#ef7fae'];
     for (var i = 0; i < 10; i++) {
       var s = document.createElement('span');
       s.className = 'float-heart';
@@ -669,28 +801,37 @@
     el._t = setTimeout(function () { el.classList.remove('show'); }, ms || 2800);
   }
 
-  /* ================= the runaway button ================= */
+  /* ================= the runaway button (short hops) ================= */
   var yes = $('#yes');
   var no = $('#no');
   var slot = $('#noSlot');
   var toast = $('#toast');
 
   var MAX = 6;
+  var HOP = 120;        /* ระยะหนีสูงสุด (px) — ไม่ไปไกลจากที่เดิม */
   var dodges = 0;
   var escaped = false;
   var base = null;
   var scale = 1;
   var tx = 0, ty = 0;
 
-  var NO_LABELS = ['ไม่ให้จีบ', 'ไม่ให้จีบ!', 'เอ๊ะ… อย่ากดสิ', 'ไม่จริงอ่ะ', 'ใจร้าย 🥺', 'แค่คุยก่อนก็ได้นะ', 'ก็ได้… จีบก็ได้ 🥺'];
+  var NO_LABELS = ['ขอเป็นเพื่อนก่อนนะ', 'ขอเป็นเพื่อนก่อนนะ ♡', 'ยังไม่พร้อมน้า', 'ขอเป็นเพื่อนก่อนน้า', 'แค่เพื่อนก่อนได้มั้ย', 'ก็ได้… คุยก่อนก็ได้ 🥺', 'ก็ได้… คุยกันก่อนก็ได้ 🥺'];
   var TAUNTS = [
-    'ปุ่มมันหนีไปแล้ว…',
+    'ปุ่มมันขยับหนี…',
     'ลองอีกทีนะ ♡',
     'ไม่ทันแล้วล่ะ',
-    'พี่ใจร้ายจัง',
-    'มันไม่ยอมให้กดจริง ๆ',
-    'ก็บอกแล้วไงว่าไม่ให้จีบ'
+    'พี่เป็นคนขี้อายจัง',
+    'มันยังไม่ยอมให้กด',
+    'ก็บอกแล้วไงว่าขอเป็นเพื่อนก่อน'
   ];
+
+  function clamp(v, lo, hi) { return Math.min(Math.max(v, lo), hi); }
+
+  function overlapsYes(x, y, w, h) {
+    var r = yes.getBoundingClientRect();
+    var pad = 12;
+    return !(x + w < r.left - pad || x > r.right + pad || y + h < r.top - pad || y > r.bottom + pad);
+  }
 
   function flee() {
     if (dodges >= MAX) return false;
@@ -711,38 +852,36 @@
 
     dodges++;
 
-    var pad = 14;
+    var pad = 12;
     var w = base.w, h = base.h;
     var maxX = Math.max(pad, window.innerWidth - w - pad);
     var maxY = Math.max(pad, window.innerHeight - h - pad);
-    var yr = yes.getBoundingClientRect();
-    var ycx = yr.left + yr.width / 2;
-    var ycy = yr.top + yr.height / 2;
     var best = null;
 
-    for (var i = 0; i < 28; i++) {
-      var x = pad + Math.random() * Math.max(1, maxX - pad);
-      var y = pad + Math.random() * Math.max(1, maxY - pad);
-      var dYes = Math.hypot(x + w / 2 - ycx, y + h / 2 - ycy);
-      if (dYes < 80) continue;
-      var dOrig = Math.hypot(x - base.left, y - base.top);
-      var score = dYes + dOrig * 0.45 + Math.random() * 50;
-      if (!best || score > best.score) best = { x: x, y: y, score: score };
+    for (var i = 0; i < 46; i++) {
+      var ang = Math.random() * Math.PI * 2;
+      var dist = 46 + Math.random() * HOP;
+      var x = clamp(base.left + Math.cos(ang) * dist, pad, maxX);
+      var y = clamp(base.top + Math.sin(ang) * dist, pad, maxY);
+      if (overlapsYes(x, y, w, h)) continue;
+      var moved = Math.hypot(x - base.left, y - base.top);
+      if (!best || moved > best.moved) best = { x: x, y: y, moved: moved };
+      if (i > 8 && moved > 70) break;
     }
-    if (!best) best = { x: pad, y: Math.max(pad, maxY - pad) };
+    if (!best) best = { x: clamp(base.left, pad, maxX), y: clamp(base.top - 54, pad, maxY), moved: 54 };
 
     tx = best.x - base.left;
     ty = best.y - base.top;
-    scale = Math.max(0.6, 1 - dodges * 0.06);
+    scale = Math.max(0.68, 1 - dodges * 0.05);
 
-    no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ') rotate(' + (Math.random() * 12 - 6).toFixed(1) + 'deg)';
+    no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ') rotate(' + (Math.random() * 10 - 5).toFixed(1) + 'deg)';
     no.textContent = NO_LABELS[Math.min(dodges, NO_LABELS.length - 1)];
-    yes.style.setProperty('--grow', (1 + dodges * 0.045).toFixed(3));
+    yes.style.setProperty('--grow', (1 + dodges * 0.035).toFixed(3));
     flash(toast, TAUNTS[Math.min(dodges - 1, TAUNTS.length - 1)]);
     sfx.dodge();
 
     if (dodges >= MAX) {
-      /* it finally gives up */
+      /* it finally gives up, back to normal size */
       no.classList.add('yielded');
       no.textContent = NO_LABELS[NO_LABELS.length - 1];
       no.style.transition = 'none';
@@ -761,7 +900,7 @@
       scale = 1;
       no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(1) rotate(0deg)';
       requestAnimationFrame(function () { no.style.transition = ''; });
-      flash(toast, 'เอาละ ๆ … ยอมแล้วก็ได้ ♡', 3400);
+      flash(toast, 'เอาละ ๆ … คุยกันก่อนก็ได้ ♡', 3400);
     }
 
     return true;
@@ -779,11 +918,11 @@
 
   window.addEventListener('resize', function () {
     if (!escaped) return;
-    var pad = 14;
+    var pad = 12;
     var maxX = Math.max(pad, window.innerWidth - base.w - pad);
     var maxY = Math.max(pad, window.innerHeight - base.h - pad);
-    var x = Math.min(Math.max(pad, base.left + tx), maxX);
-    var y = Math.min(Math.max(pad, base.top + ty), maxY);
+    var x = clamp(base.left + tx, pad, maxX);
+    var y = clamp(base.top + ty, pad, maxY);
     tx = x - base.left;
     ty = y - base.top;
     no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ') rotate(0deg)';
@@ -831,7 +970,10 @@
 
     if (!typed) {
       typed = true;
-      typeLines(typeEl, ['งั้น… ขออนุญาตจีบจริง ๆ นะ ♡', 'แต่ก่อนอื่น ขอรู้จักพี่มากขึ้นอีกหน่อยได้มั้ย']);
+      typeLines(typeEl, [
+        'งั้น.... ขออนุญาติจีบพี่จริงๆเลยนะ',
+        'แต่ถ้าเราได้เจอกันครั้งแรก อยากรู้จักอีกนิดหน่อยได้มั่ย'
+      ], 38);
     }
   }
 
@@ -872,8 +1014,13 @@
 
     var names = picked.map(function (c) { return c.dataset.label; });
     var msg;
-    if (names.length >= 2) msg = 'เริ่มจาก “' + names[0] + '” แล้วก็ “' + names[1] + '” นะ ♡';
-    else msg = 'เริ่มจาก “' + names[0] + '” ก่อนนะ ♡';
+    if (names.length >= 3) {
+      msg = 'เริ่มจาก “' + names[0] + '” → “' + names[1] + '” → “' + names[2] + '” นะ ♡';
+    } else if (names.length === 2) {
+      msg = 'เริ่มจาก “' + names[0] + '” แล้วก็ “' + names[1] + '” นะ ♡';
+    } else {
+      msg = 'เริ่มจาก “' + names[0] + '” ก่อนนะ ♡';
+    }
 
     show('done');
     typeInto(finalEl, msg, 34);
