@@ -1,0 +1,1195 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>อยากเป็นคนพิเศษของพี่ชมพูพิ้งค์ได้ไหม? ♡</title>
+<meta name="description" content="ถ้าเป็นไปได้..... อยากมีประตูวิเศษเปิดเข้าไปในใจพี่ชมพูพิ้งค์จัง ♡" />
+<meta name="theme-color" content="#f6efff" />
+<meta property="og:title" content="อยากเป็นคนพิเศษของพี่ชมพูพิ้งค์ได้ไหม? ♡" />
+<meta property="og:description" content="ถ้าเป็นไปได้..... อยากมีประตูวิเศษเปิดเข้าไปในใจพี่ชมพูพิ้งค์จัง" />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *,*::before,*::after{ box-sizing:border-box }
+  [hidden]{ display:none !important }
+
+  :root{
+    --cream:#f7f1ff;
+    --lilac:#efe4ff;
+    --violet:#7d5aa8;
+    --violet-deep:#5b3f84;
+    --violet-soft:#b79ee0;
+    --pink:#e0669b;
+    --pink-deep:#c24a7e;
+    --pink-soft:#ff9ec5;
+    --ink:#312243;
+    --ink-soft:#79688d;
+    --card:rgba(255,255,255,.84);
+  }
+
+  html,body{ height:100% }
+
+  body{
+    margin:0;
+    min-height:100svh;
+    display:grid;
+    place-items:center;
+    padding:clamp(18px,4vw,52px) clamp(14px,4vw,40px);
+    font-family:'IBM Plex Sans Thai', system-ui, -apple-system, 'Segoe UI', 'Noto Sans Thai', sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    background:
+      radial-gradient(120% 90% at 8% 0%, #f6ecff 0%, rgba(246,236,255,0) 58%),
+      radial-gradient(110% 85% at 94% 4%, #ffe9f6 0%, rgba(255,233,246,0) 62%),
+      radial-gradient(130% 100% at 50% 112%, #efe0ff 0%, rgba(239,224,255,0) 66%),
+      var(--cream);
+    overflow-x:hidden;
+  }
+
+  /* ---------- layers ---------- */
+  #snow{
+    position:fixed; inset:0;
+    overflow:hidden; pointer-events:none; z-index:1;
+  }
+  .flake{
+    position:absolute; top:-12vh;
+    color:#fff;
+    line-height:1;
+    text-shadow:0 0 8px rgba(150,110,210,.5);
+    animation-name:snowfall;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+    will-change:transform;
+    user-select:none;
+  }
+  .flake.dot{
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 32%, #fff, #e6d8ff 72%);
+    text-shadow:none;
+    box-shadow:0 0 7px rgba(160,120,220,.45);
+  }
+
+  #floaters{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0 }
+  .float-heart{
+    position:absolute; top:100%;
+    animation-name:drift; animation-timing-function:linear; animation-iteration-count:infinite;
+    opacity:0; will-change:transform;
+  }
+  #fx{ position:fixed; inset:0; pointer-events:none; z-index:6 }
+
+  main{ position:relative; z-index:2; width:min(620px,100%) }
+
+  .screen{ display:none }
+  .screen.is-active{ display:block; animation:rise .8s cubic-bezier(.2,.85,.2,1) both }
+
+  /* ---------- card ---------- */
+  .card{
+    position:relative;
+    text-align:center;
+    padding:clamp(20px,4.6vw,42px) clamp(16px,4.4vw,42px) clamp(20px,4.4vw,38px);
+    border-radius:clamp(26px,5vw,40px);
+    border:1px solid rgba(125,90,168,.16);
+    background:var(--card);
+    box-shadow:
+      0 34px 74px -34px rgba(91,63,132,.4),
+      0 1px 0 rgba(255,255,255,.92) inset;
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    overflow:hidden;
+  }
+  /* frosty glow at the top of the card (kuromi night) */
+  .card::before{
+    content:''; position:absolute; inset:-40% 20% auto -20%;
+    height:60%;
+    background:radial-gradient(closest-side, rgba(183,158,224,.35), rgba(183,158,224,0));
+    pointer-events:none;
+  }
+
+  .deco{
+    position:absolute;
+    font-size:clamp(14px,3.2vw,19px);
+    color:rgba(125,90,168,.42);
+    animation:bob 5s ease-in-out infinite;
+    pointer-events:none; user-select:none;
+  }
+  .deco-tl{ top:16px; left:20px }
+  .deco-tr{ top:16px; right:20px; animation-delay:-1.4s }
+  .deco-bl{ bottom:14px; left:22px; animation-delay:-2.6s; color:rgba(224,102,155,.4) }
+  .deco-br{ bottom:14px; right:22px; animation-delay:-3.7s; color:rgba(224,102,155,.4) }
+
+  .badge{
+    margin:0 0 clamp(10px,2.2vw,16px);
+    font-size:.64rem;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--violet);
+    display:flex; align-items:center; justify-content:center; gap:.85em;
+  }
+  .badge::before,.badge::after{
+    content:''; height:1px; width:clamp(16px,6vw,44px);
+    background:linear-gradient(90deg, rgba(125,90,168,0), rgba(125,90,168,.55));
+  }
+  .badge::after{ transform:scaleX(-1) }
+
+  /* ---------- mascot panel (แบบการ์ดในคลิป) ---------- */
+  .mascot-wrap{
+    position:relative;
+    width:min(264px, 68vw);
+    margin:0 auto clamp(14px,3vw,20px);
+    padding:clamp(10px,2.4vw,16px);
+    border-radius:clamp(22px,4.6vw,30px);
+    background:
+      radial-gradient(120% 100% at 50% 0%, #ffffff 0%, #f7efff 46%, #ffeaf6 100%);
+    border:1px solid rgba(125,90,168,.14);
+    box-shadow:0 18px 40px -30px rgba(91,63,132,.9), 0 1px 0 #fff inset;
+    overflow:hidden;
+  }
+  .mascot-wrap::after{  /* ขอบมนด้านใน ให้ดูเป็นช่องรูป */
+    content:''; position:absolute; inset:6px;
+    border-radius:inherit;
+    border:1px solid rgba(255,255,255,.9);
+    pointer-events:none;
+  }
+  .mascot{
+    display:block; width:100%; height:auto;
+    filter:drop-shadow(0 18px 24px rgba(91,63,132,.32));
+    animation:mascotFloat 4.4s ease-in-out infinite;
+  }
+  .ear{ transform-box:fill-box; transform-origin:50% 96% }
+  .ear-l{ animation:earSway 4.8s ease-in-out infinite }
+  .ear-r{ animation:earSway 5.6s ease-in-out infinite reverse }
+  .eyes{ transform-box:fill-box; transform-origin:50% 50%; animation:blinkEye 5.6s infinite }
+  .held-heart{ transform-box:fill-box; transform-origin:50% 50%; animation:heartPulse 1.9s ease-in-out infinite }
+  .charm{ transform-box:fill-box; transform-origin:50% 0%; animation:charmSwing 3.6s ease-in-out infinite }
+
+  .spark{
+    position:absolute;
+    font-size:clamp(11px,2.8vw,16px);
+    color:var(--violet-soft);
+    animation:twinkle 3.4s ease-in-out infinite;
+    pointer-events:none; user-select:none;
+  }
+  .spark-1{ top:8%; left:4%; animation-delay:-.4s; color:var(--pink-soft) }
+  .spark-2{ top:22%; right:4%; animation-delay:-1.6s }
+  .spark-3{ bottom:14%; left:3%; animation-delay:-2.4s }
+  .spark-4{ bottom:6%; right:6%; animation-delay:-3.1s; color:var(--pink-soft) }
+
+  h1{
+    font-family:'Mali', 'IBM Plex Sans Thai', cursive;
+    font-weight:600;
+    font-size:clamp(1.58rem,5.9vw,2.4rem);
+    line-height:1.42;
+    letter-spacing:-.005em;
+    margin:.1em 0 .46em;
+    padding-bottom:.06em;
+    background:linear-gradient(160deg,#5b3f84 0%, #8b5fc0 46%, #d169a8 100%);
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent; -webkit-text-fill-color:transparent;
+  }
+
+  h2{
+    font-family:'Mali', 'IBM Plex Sans Thai', cursive;
+    font-weight:600;
+    font-size:clamp(1.46rem,5vw,2.05rem);
+    line-height:1.42;
+    color:var(--violet-deep);
+    margin:.1em 0 .6em;
+  }
+
+  .lead{
+    margin:0 auto;
+    max-width:34ch;
+    font-weight:300;
+    font-size:clamp(.96rem,2.9vw,1.06rem);
+    line-height:2;
+    color:var(--ink-soft);
+  }
+  .lead em{
+    font-style:normal; font-weight:500; color:var(--pink-deep);
+    background:linear-gradient(transparent 62%, rgba(226,196,255,.95) 62%);
+  }
+
+  .hint{
+    margin:clamp(16px,3.4vw,24px) 0 0;
+    font-size:.85rem;
+    letter-spacing:.02em;
+    color:rgba(121,104,141,.92);
+  }
+
+  .progress{
+    margin:0 0 clamp(12px,2.6vw,18px);
+    font-size:.72rem;
+    letter-spacing:.2em;
+    color:var(--violet);
+  }
+
+  /* ---------- buttons ---------- */
+  .choices{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+    gap:clamp(9px,2.2vw,13px);
+    margin-top:clamp(16px,3.6vw,26px);
+  }
+  .no-slot{ display:inline-flex }
+
+  .btn{
+    font:inherit;
+    font-size:clamp(.92rem,2.5vw,1.02rem);
+    font-weight:500;
+    line-height:1.25;
+    padding:.88em 1.55em;
+    border-radius:999px;
+    border:1.5px solid transparent;
+    cursor:pointer;
+    white-space:nowrap;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+    transition:transform .26s cubic-bezier(.2,.85,.2,1), box-shadow .26s, background .26s, color .26s, border-color .26s, filter .26s, opacity .3s ease;
+  }
+
+  .btn.primary{
+    color:#fff;
+    background:linear-gradient(135deg,#a97ad8 0%, #cd6cb3 52%, #e0669b 100%);
+    box-shadow:0 16px 32px -14px rgba(125,90,168,.85), 0 1px 0 rgba(255,255,255,.4) inset;
+    transform:scale(var(--grow,1));
+  }
+  .btn.primary:hover{ transform:translateY(-3px) scale(var(--grow,1)); filter:brightness(1.06) }
+  .btn.primary:active{ transform:translateY(0) scale(calc(var(--grow,1) * .97)) }
+
+  .btn.ghost{
+    color:var(--violet-deep);
+    background:rgba(255,255,255,.78);
+    border-color:rgba(125,90,168,.32);
+  }
+  .btn.ghost:hover{ background:#fff; border-color:rgba(125,90,168,.58); transform:translateY(-2px) }
+
+  .btn:focus-visible{ outline:2px solid rgba(125,90,168,.6); outline-offset:3px }
+
+  /* the runaway button */
+  .btn.escaped{
+    position:fixed;
+    z-index:20;
+    margin:0;
+    transition:transform .42s cubic-bezier(.34,1.5,.5,1), background .26s, color .26s, border-color .26s, box-shadow .26s, opacity .3s ease;
+    will-change:transform;
+  }
+  .btn.escaped.yielded{
+    background:linear-gradient(135deg,#efe4ff, #ffd9ec);
+    color:var(--violet-deep);
+    border-color:rgba(125,90,168,.5);
+    box-shadow:0 12px 26px -16px rgba(91,63,132,.8);
+    animation:pulse-soft 2.2s ease-out infinite;
+  }
+  /* ปุ่มที่ถูกเก็บไปแล้ว (แก้บั๊ก: กดปุ่มซ้ายแล้วปุ่มขวาไม่หาย) */
+  .btn.escaped.retired{
+    opacity:0;
+    pointer-events:none;
+  }
+
+  /* ---------- messages ---------- */
+  .toast,.note{
+    min-height:1.55em;
+    margin:clamp(10px,2.2vw,14px) 0 0;
+    font-size:.87rem;
+    color:var(--ink-soft);
+    opacity:0;
+    transform:translateY(-4px);
+    transition:opacity .32s ease, transform .32s ease;
+  }
+  .toast.show,.note.show{ opacity:1; transform:none }
+
+  .sign{
+    margin:clamp(14px,3vw,24px) 0 0;
+    font-size:.74rem;
+    letter-spacing:.1em;
+    color:rgba(121,104,141,.78);
+  }
+
+  /* ---------- step 2 ---------- */
+  .type{
+    margin:0 auto;
+    min-height:3.6em;
+    max-width:38ch;
+    font-size:clamp(1rem,2.9vw,1.1rem);
+    line-height:1.85;
+    font-weight:400;
+    color:var(--ink);
+  }
+  .type .line{ display:block }
+
+  .caret{
+    display:inline-block;
+    width:.46ch; height:1.02em;
+    margin-left:.06em;
+    vertical-align:-.15em;
+    border-radius:2px;
+    background:var(--violet-soft);
+    animation:blink .9s steps(2,start) infinite;
+  }
+
+  .sub{
+    margin:clamp(12px,2.4vw,16px) auto 0;
+    max-width:36ch;
+    font-size:.89rem;
+    font-weight:300;
+    line-height:1.95;
+    color:var(--ink-soft);
+  }
+
+  .chips{
+    display:flex; flex-wrap:wrap; justify-content:center;
+    gap:clamp(8px,2vw,11px);
+    margin-top:clamp(18px,3.6vw,26px);
+  }
+  .chips.shake{ animation:shake .45s ease }
+
+  .chip{
+    position:relative;
+    font:inherit;
+    font-size:.89rem;
+    line-height:1.3;
+    padding:.62em 1.05em;
+    border-radius:999px;
+    border:1.5px solid rgba(125,90,168,.22);
+    background:rgba(255,255,255,.74);
+    color:var(--ink);
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+    transition:transform .22s cubic-bezier(.2,.85,.2,1), background .22s, border-color .22s, color .22s, box-shadow .22s;
+  }
+  .chip:hover{ transform:translateY(-2px); background:#fff; border-color:rgba(125,90,168,.45) }
+  .chip[aria-pressed="true"]{
+    background:linear-gradient(135deg,#efe2ff, #ffd9ec);
+    border-color:rgba(125,90,168,.55);
+    color:var(--violet-deep);
+    box-shadow:0 10px 20px -14px rgba(91,63,132,.9);
+  }
+  .chip:focus-visible{ outline:2px solid rgba(125,90,168,.55); outline-offset:2px }
+
+  /* ---------- final ---------- */
+  .bigheart{
+    font-size:clamp(3.2rem,12vw,4.8rem);
+    line-height:1;
+    margin:0 0 .18em;
+    color:var(--pink);
+    animation:beat 1.8s ease-in-out infinite;
+    text-shadow:0 16px 34px rgba(194,74,126,.3);
+  }
+  .final-line{
+    min-height:1.8em;
+    margin:0 auto;
+    max-width:36ch;
+    font-family:'Mali', 'IBM Plex Sans Thai', cursive;
+    font-size:clamp(1rem,3.2vw,1.22rem);
+    line-height:1.7;
+    color:var(--violet-deep);
+  }
+
+  /* ---------- sound ---------- */
+  .sound{
+    position:fixed; top:14px; right:14px; z-index:30;
+    width:40px; height:40px;
+    display:grid; place-items:center;
+    font-size:1rem;
+    color:var(--violet-deep);
+    background:rgba(255,255,255,.8);
+    border:1px solid rgba(125,90,168,.22);
+    border-radius:50%;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    box-shadow:0 10px 22px -16px rgba(91,63,132,.9);
+    transition:transform .2s, background .2s;
+  }
+  .sound:hover{ transform:scale(1.06); background:#fff }
+  .sound.muted{ color:rgba(121,104,141,.55) }
+  .sound.muted::after{
+    content:'';
+    position:absolute; width:60%; height:1.5px;
+    background:currentColor; border-radius:2px;
+    transform:rotate(-45deg);
+  }
+
+  /* ---------- motion ---------- */
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(18px) scale(.985) }
+    to{ opacity:1; transform:none }
+  }
+  @keyframes snowfall{
+    0%{ transform:translate3d(0,0,0) rotate(0deg); opacity:0 }
+    8%{ opacity:.95 }
+    88%{ opacity:.55 }
+    100%{ transform:translate3d(var(--sway,24px), 122vh, 0) rotate(300deg); opacity:0 }
+  }
+  @keyframes drift{
+    0%{ transform:translateY(0) rotate(0deg); opacity:0 }
+    8%{ opacity:.45 }
+    85%{ opacity:.28 }
+    100%{ transform:translateY(-118vh) rotate(200deg); opacity:0 }
+  }
+  @keyframes bob{
+    0%,100%{ transform:translateY(0) rotate(-4deg) }
+    50%{ transform:translateY(-6px) rotate(5deg) }
+  }
+  @keyframes blink{ 50%{ opacity:0 } }
+  @keyframes beat{
+    0%,100%{ transform:scale(1) }
+    18%{ transform:scale(1.1) }
+    36%{ transform:scale(1) }
+    54%{ transform:scale(1.06) }
+  }
+  @keyframes pulse-soft{
+    0%{ box-shadow:0 0 0 0 rgba(125,90,168,.42) }
+    70%{ box-shadow:0 0 0 16px rgba(125,90,168,0) }
+    100%{ box-shadow:0 0 0 0 rgba(125,90,168,0) }
+  }
+  @keyframes shake{
+    0%,100%{ transform:translateX(0) }
+    20%{ transform:translateX(-7px) }
+    40%{ transform:translateX(6px) }
+    60%{ transform:translateX(-4px) }
+    80%{ transform:translateX(3px) }
+  }
+  @keyframes mascotFloat{
+    0%,100%{ transform:translateY(0) rotate(-1.2deg) }
+    50%{ transform:translateY(-8px) rotate(1.2deg) }
+  }
+  @keyframes earSway{
+    0%,100%{ transform:rotate(-3deg) }
+    50%{ transform:rotate(-11deg) }
+  }
+  @keyframes blinkEye{
+    0%, 87%, 100%{ transform:scaleY(1) }
+    92%{ transform:scaleY(.12) }
+    96%{ transform:scaleY(1) }
+  }
+  @keyframes heartPulse{
+    0%,100%{ transform:scale(1) }
+    45%{ transform:scale(1.09) }
+  }
+  @keyframes charmSwing{
+    0%,100%{ transform:rotate(-6deg) }
+    50%{ transform:rotate(8deg) }
+  }
+  @keyframes twinkle{
+    0%,100%{ opacity:.15; transform:scale(.72) rotate(-6deg) }
+    50%{ opacity:1; transform:scale(1) rotate(6deg) }
+  }
+
+  @media (max-width:400px){
+    .btn{ padding:.82em 1.28em }
+    .lead{ font-size:.94rem }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important }
+    #snow,#floaters{ display:none }
+  }
+</style>
+</head>
+<body>
+
+<div id="snow" aria-hidden="true"></div>
+<div id="floaters" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<button class="sound" id="sound" type="button" aria-pressed="true" aria-label="ปิดเสียง">♪</button>
+
+<main>
+
+  <!-- ============ STEP 1 ============ -->
+  <section class="screen is-active" id="screen-ask" aria-labelledby="ask-title">
+    <div class="card">
+      <span class="deco deco-tl" aria-hidden="true">✦</span>
+      <span class="deco deco-tr" aria-hidden="true">♡</span>
+      <span class="deco deco-bl" aria-hidden="true">♡</span>
+      <span class="deco deco-br" aria-hidden="true">✧</span>
+
+      <p class="badge">A little wish for you</p>
+
+      <!-- ตัวการ์ตูนธีมคุโรมิ (วาดเองด้วย SVG) -->
+      <div class="mascot-wrap">
+        <span class="spark spark-1" aria-hidden="true">✧</span>
+        <span class="spark spark-2" aria-hidden="true">✦</span>
+        <span class="spark spark-3" aria-hidden="true">♡</span>
+        <span class="spark spark-4" aria-hidden="true">✧</span>
+
+        <svg class="mascot" viewBox="0 0 240 240" role="img"
+             aria-label="ตัวการ์ตูนกระต่ายหูกระต่ายสวมฮู้ดสีม่วงเข้ม มีตราหัวกะโหลกสีชมพู ถือหัวใจ">
+          <defs>
+            <linearGradient id="kHood" x1="0.15" y1="0" x2="0.85" y2="1">
+              <stop offset="0" stop-color="#4b3468" />
+              <stop offset="0.55" stop-color="#37254f" />
+              <stop offset="1" stop-color="#251839" />
+            </linearGradient>
+            <linearGradient id="kEar" x1="0.5" y1="0" x2="0.5" y2="1">
+              <stop offset="0" stop-color="#493163" />
+              <stop offset="1" stop-color="#2a1b3f" />
+            </linearGradient>
+            <linearGradient id="kFace" x1="0.5" y1="0" x2="0.5" y2="1">
+              <stop offset="0" stop-color="#ffffff" />
+              <stop offset="1" stop-color="#f7f2ff" />
+            </linearGradient>
+            <linearGradient id="kHeart" x1="0.2" y1="0" x2="0.8" y2="1">
+              <stop offset="0" stop-color="#c79bf0" />
+              <stop offset="1" stop-color="#a96bd8" />
+            </linearGradient>
+            <radialGradient id="kHalo" cx="0.5" cy="0.45" r="0.56">
+              <stop offset="0" stop-color="#f3e9ff" stop-opacity="0.95" />
+              <stop offset="0.65" stop-color="#ffeaf6" stop-opacity="0.5" />
+              <stop offset="1" stop-color="#ffeaf6" stop-opacity="0" />
+            </radialGradient>
+          </defs>
+
+          <circle cx="120" cy="124" r="108" fill="url(#kHalo)" />
+
+          <!-- ears -->
+          <g class="ear ear-l">
+            <path d="M84 96C66 74 58 46 66 30c7-14 24-11 30 4 7 17 9 44 6 62z"
+                  fill="url(#kEar)" stroke="#1c1230" stroke-width="1.6" stroke-linejoin="round" />
+            <path d="M82 82c-8-16-10-32-6-41 3-6 9-5 11 2 4 11 4 27 2 39z"
+                  fill="#6f4f9c" opacity="0.85" />
+          </g>
+          <g class="ear ear-r">
+            <path d="M156 96c18-22 26-50 18-66-7-14-24-11-30 4-7 17-9 44-6 62z"
+                  fill="url(#kEar)" stroke="#1c1230" stroke-width="1.6" stroke-linejoin="round" />
+            <path d="M158 82c8-16 10-32 6-41-3-6-9-5-11 2-4 11-4 27-2 39z"
+                  fill="#6f4f9c" opacity="0.85" />
+          </g>
+
+          <!-- hood -->
+          <path d="M120 52c40 0 68 27 68 64 0 40-30 66-68 66s-68-26-68-66c0-37 28-64 68-64z"
+                fill="url(#kHood)" stroke="#1c1230" stroke-width="1.8" />
+
+          <!-- skull emblem on hood -->
+          <g transform="translate(120,86)">
+            <path d="M0-13c8.6 0 15 6.1 15 14 0 5.2-2.4 8.8-6 10.8v4.2c0 1.6-1.3 2.9-2.9 2.9h-12.2C-7.7 18.9-9 17.6-9 16v-4.2C-12.6 9.8-15 6.2-15 1c0-7.9 6.4-14 15-14z"
+                  fill="#ffb3d1" stroke="#e7699f" stroke-width="1.4" stroke-linejoin="round" />
+            <circle cx="-5.2" cy="-0.6" r="3.1" fill="#3b2350" />
+            <circle cx="5.2" cy="-0.6" r="3.1" fill="#3b2350" />
+            <path d="M-1.6 6.2l1.6 2.6 1.6-2.6z" fill="#3b2350" />
+            <path d="M-5.4 12.4v4.4M0 12.4v4.4M5.4 12.4v4.4" stroke="#e7699f" stroke-width="1.2" stroke-linecap="round" />
+          </g>
+
+          <!-- face -->
+          <ellipse cx="120" cy="132" rx="49" ry="44" fill="url(#kFace)" />
+
+          <!-- eyes -->
+          <g class="eyes">
+            <ellipse cx="102" cy="129" rx="6" ry="7.8" fill="#2a1b33" />
+            <ellipse cx="138" cy="129" rx="6" ry="7.8" fill="#2a1b33" />
+            <circle cx="104.2" cy="125.4" r="1.9" fill="#ffffff" />
+            <circle cx="140.2" cy="125.4" r="1.9" fill="#ffffff" />
+          </g>
+
+          <!-- blush -->
+          <ellipse cx="85" cy="144" rx="9" ry="5.2" fill="#ffb3cc" opacity="0.62" />
+          <ellipse cx="155" cy="144" rx="9" ry="5.2" fill="#ffb3cc" opacity="0.62" />
+
+          <!-- mouth: ยิ้มเล็ก ๆ แบบเขิน -->
+          <path d="M113 149q7 6 14 0" fill="none" stroke="#8b6aa8" stroke-width="2.2" stroke-linecap="round" />
+
+          <!-- hands + heart -->
+          <ellipse cx="97" cy="183" rx="11.5" ry="9" fill="#fdfbff" stroke="#d8c7ef" stroke-width="1.3" />
+          <ellipse cx="143" cy="183" rx="11.5" ry="9" fill="#fdfbff" stroke="#d8c7ef" stroke-width="1.3" />
+          <g class="held-heart">
+            <path d="M120 201c-13-10-22-17-22-25 0-6 4.6-9.6 10.4-9.6 4.6 0 8.4 2.6 11.6 7.4 3.2-4.8 7-7.4 11.6-7.4 5.8 0 10.4 3.6 10.4 9.6 0 8-9 15-22 25z"
+                  fill="url(#kHeart)" stroke="#8f58c4" stroke-width="1.5" />
+            <ellipse cx="110" cy="176" rx="3.4" ry="2.4" fill="#ffffff" opacity="0.72" transform="rotate(-20 110 176)" />
+          </g>
+
+          <!-- charm ที่ฮู้ด -->
+          <g class="charm" transform="translate(170,120)">
+            <circle cx="0" cy="0" r="2.6" fill="#ffb3d1" stroke="#e7699f" stroke-width="1" />
+            <path d="M0 4v7" stroke="#e7699f" stroke-width="1.3" stroke-linecap="round" />
+            <path d="M0 18c-3.6-2.6-6-4.4-6-6.4 0-1.5 1.2-2.4 2.6-2.4 1.2 0 2.2.7 3 1.9.8-1.2 1.8-1.9 3-1.9 1.4 0 2.6.9 2.6 2.4 0 2-2.4 3.8-6 6.4z"
+                  fill="#ff9ec5" stroke="#e7699f" stroke-width="1" />
+          </g>
+        </svg>
+      </div>
+
+      <h1 id="ask-title">อยากเป็นคนพิเศษ<br />ของพี่ชมพูพิ้งค์ได้ไหม?</h1>
+      <p class="lead">ถ้าเป็นไปได้.....<br />อยากมีประตูวิเศษเปิดเข้าไป<br />ในใจ<em>พี่ชมพูพิ้งค์</em>จัง ♡</p>
+
+      <p class="hint" id="hint">ลองเลือกคำตอบดูสิ ♡</p>
+
+      <div class="choices">
+        <button class="btn primary" id="yes" type="button">คุยกันก่อนนะ</button>
+        <span class="no-slot" id="noSlot">
+          <button class="btn ghost" id="no" type="button">ขอเป็นเพื่อนก่อนนะ</button>
+        </span>
+      </div>
+
+      <p class="toast" id="toast" role="status" aria-live="polite"></p>
+      <p class="sign">— จากคนที่อยากเป็นคนพิเศษของพี่ ♡</p>
+    </div>
+  </section>
+
+  <!-- ============ STEP 2 ============ -->
+  <section class="screen" id="screen-plan" aria-labelledby="plan-title">
+    <div class="card">
+      <span class="deco deco-tl" aria-hidden="true">✦</span>
+      <span class="deco deco-br" aria-hidden="true">♡</span>
+
+      <p class="progress">ขั้นที่ 2 จาก 2</p>
+      <h2 id="plan-title">ดีใจจังที่พี่ยอมคุยด้วย</h2>
+      <p class="type" id="type"></p>
+      <p class="sub">ถ้าได้เจอกัน เลือกอย่างแรกที่อยากทำด้วยกันได้เลย<br />เลือกได้หลายอย่างนะ ♡</p>
+
+      <div class="chips" id="chips">
+        <button class="chip" type="button" aria-pressed="false" data-label="พาไปกินของอร่อย">🍜 พาไปกินของอร่อย</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="ดูหนังด้วยกัน">🎬 ดูหนังด้วยกัน</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="เดินเล่นคุยกัน">🌙 เดินเล่นคุยกัน</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="ถ่ายรูปคู่กัน">📷 ถ่ายรูปคู่กัน</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="คุยกันเหมือนเดิมเรื่อยเปื่อย">☕ คุยกันเหมือนเดิมเรื่อยเปื่อย</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="ไปร้องเพลงกัน">🎤 ไปร้องเพลงกัน</button>
+      </div>
+
+      <p class="note" id="note" role="status" aria-live="polite"></p>
+
+      <div class="choices">
+        <button class="btn primary" id="confirm" type="button">ตกลง ♡</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP 3 ============ -->
+  <section class="screen" id="screen-done" aria-labelledby="done-title">
+    <div class="card">
+      <span class="deco deco-tl" aria-hidden="true">✦</span>
+      <span class="deco deco-tr" aria-hidden="true">♡</span>
+      <span class="deco deco-bl" aria-hidden="true">♡</span>
+      <span class="deco deco-br" aria-hidden="true">✧</span>
+
+      <div class="bigheart" aria-hidden="true">♥</div>
+      <p class="progress">จากนี้ไป</p>
+      <h2 id="done-title">ขอบคุณนะ พี่ชมพูพิ้งค์ ♡</h2>
+      <p class="final-line" id="finalLine"></p>
+      <p class="sub">เก็บความกล้าครั้งนี้ไว้ในกระเป๋าเสื้อแล้ว<br />แล้วเจอกันนะ ♡</p>
+
+      <div class="choices">
+        <button class="btn ghost" id="replay" type="button">เริ่มใหม่อีกครั้ง</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<noscript>
+  <p style="text-align:center;font-family:sans-serif">หน้านี้ต้องเปิดใช้งาน JavaScript นะ ♡</p>
+</noscript>
+
+<script>
+(function () {
+  'use strict';
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+
+  /* ================= sound ================= */
+  var ac = null, soundOn = true;
+
+  function audio() {
+    if (!ac) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ac = new AC();
+    }
+    if (ac.state === 'suspended') ac.resume();
+    return ac;
+  }
+
+  function tone(freq, dur, type, vol, delay) {
+    if (!soundOn) return;
+    var c = audio();
+    if (!c) return;
+    var t0 = c.currentTime + (delay || 0);
+    var osc = c.createOscillator();
+    var g = c.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.linearRampToValueAtTime(vol == null ? 0.05 : vol, t0 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(g);
+    g.connect(c.destination);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.06);
+  }
+
+  var sfx = {
+    tap: function () { tone(780, 0.1, 'sine', 0.028); },
+    dodge: function () { tone(360, 0.1, 'square', 0.022); tone(470, 0.11, 'triangle', 0.02, 0.05); },
+    chime: function () {
+      tone(659.25, 0.55, 'sine', 0.042);
+      tone(987.77, 0.6, 'sine', 0.03, 0.08);
+      tone(1318.5, 0.75, 'sine', 0.019, 0.16);
+    }
+  };
+
+  /* ================= particles ================= */
+  var cv = $('#fx');
+  var g = cv.getContext('2d');
+  var W = 0, H = 0, DPR = 1, running = false;
+  var parts = [];
+  var PALETTE = ['#a97ad8', '#c79bf0', '#ff9ec5', '#ffc4dd', '#e0669b', '#b79ee0'];
+
+  function sizeCanvas() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    cv.width = Math.round(W * DPR);
+    cv.height = Math.round(H * DPR);
+    cv.style.width = W + 'px';
+    cv.style.height = H + 'px';
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
+
+  function drawHeart(x, y, s, rot, color, alpha) {
+    g.save();
+    g.translate(x, y);
+    g.rotate(rot);
+    g.scale(s, s);
+    g.globalAlpha = alpha;
+    g.fillStyle = color;
+    g.beginPath();
+    g.moveTo(0, 0.35);
+    g.bezierCurveTo(-0.95, -0.25, -0.55, -1.05, 0, -0.55);
+    g.bezierCurveTo(0.55, -1.05, 0.95, -0.25, 0, 0.35);
+    g.closePath();
+    g.fill();
+    g.restore();
+  }
+
+  function start() {
+    if (running) return;
+    running = true;
+    requestAnimationFrame(frame);
+  }
+
+  function frame() {
+    g.clearRect(0, 0, W, H);
+    for (var i = parts.length - 1; i >= 0; i--) {
+      var p = parts[i];
+      p.vy += 0.045;
+      p.vx *= 0.994;
+      p.vy *= 0.995;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.a -= p.decay;
+      if (p.a <= 0 || p.y > H + 70 || p.x < -80 || p.x > W + 80) {
+        parts.splice(i, 1);
+        continue;
+      }
+      drawHeart(p.x, p.y, p.s / 14, p.rot, p.color, Math.max(0, p.a));
+    }
+    if (parts.length) requestAnimationFrame(frame);
+    else { running = false; g.clearRect(0, 0, W, H); }
+  }
+
+  function burst(x, y, count, power) {
+    var n = reduce ? Math.min(8, count) : count;
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2;
+      var sp = (0.45 + Math.random() * 1.7) * (power || 1);
+      parts.push({
+        x: x, y: y,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp - 1.25,
+        s: 7 + Math.random() * 11,
+        rot: Math.random() * Math.PI * 2,
+        vr: (Math.random() - 0.5) * 0.16,
+        a: 1,
+        decay: 0.007 + Math.random() * 0.012,
+        color: PALETTE[(Math.random() * PALETTE.length) | 0]
+      });
+    }
+    start();
+  }
+
+  var lastTrail = 0;
+  window.addEventListener('pointermove', function (e) {
+    if (reduce || e.pointerType !== 'mouse') return;
+    var now = performance.now();
+    if (now - lastTrail < 95) return;
+    lastTrail = now;
+    parts.push({
+      x: e.clientX + (Math.random() * 18 - 9),
+      y: e.clientY + (Math.random() * 12 - 6),
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: -0.5 - Math.random() * 0.6,
+      s: 5 + Math.random() * 5,
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.1,
+      a: 0.55,
+      decay: 0.024,
+      color: PALETTE[(Math.random() * PALETTE.length) | 0]
+    });
+    start();
+  }, { passive: true });
+
+  /* ================= snow (หิมะตกเบา ๆ) ================= */
+  (function snow() {
+    if (reduce) return;
+    var layer = $('#snow');
+    var glyphs = ['❄', '❅', '✧', '❆'];
+    var total = window.innerWidth < 480 ? 26 : 42;
+    for (var i = 0; i < total; i++) {
+      var f = document.createElement('span');
+      var isDot = Math.random() < 0.4;
+      f.className = 'flake' + (isDot ? ' dot' : '');
+      if (isDot) {
+        var d = (2 + Math.random() * 3.4).toFixed(1);
+        f.style.width = d + 'px';
+        f.style.height = d + 'px';
+      } else {
+        f.textContent = glyphs[(Math.random() * glyphs.length) | 0];
+        f.style.fontSize = (7 + Math.random() * 10).toFixed(0) + 'px';
+      }
+      f.style.left = (Math.random() * 100).toFixed(2) + 'vw';
+      f.style.opacity = (0.35 + Math.random() * 0.5).toFixed(2);
+      f.style.setProperty('--sway', (Math.random() * 70 - 35).toFixed(0) + 'px');
+      f.style.animationDuration = (11 + Math.random() * 13).toFixed(1) + 's';
+      f.style.animationDelay = (-Math.random() * 22).toFixed(1) + 's';
+      layer.appendChild(f);
+    }
+  })();
+
+  /* purple sparkles drifting up behind the card */
+  (function floaties() {
+    if (reduce) return;
+    var layer = $('#floaters');
+    var glyphs = ['♡', '✧', '✦', '❥'];
+    var colors = ['#c9a7ee', '#ffc4dd', '#b79ee0', '#ff9ec5'];
+    for (var i = 0; i < 8; i++) {
+      var s = document.createElement('span');
+      s.className = 'float-heart';
+      s.textContent = glyphs[(Math.random() * glyphs.length) | 0];
+      s.style.left = (Math.random() * 100).toFixed(2) + 'vw';
+      s.style.fontSize = (12 + Math.random() * 20).toFixed(0) + 'px';
+      s.style.animationDuration = (16 + Math.random() * 16).toFixed(0) + 's';
+      s.style.animationDelay = (-Math.random() * 26).toFixed(1) + 's';
+      s.style.color = colors[(Math.random() * colors.length) | 0];
+      layer.appendChild(s);
+    }
+  })();
+
+  /* ================= screens ================= */
+  var screens = {
+    ask: $('#screen-ask'),
+    plan: $('#screen-plan'),
+    done: $('#screen-done')
+  };
+
+  function show(name) {
+    Object.keys(screens).forEach(function (k) { screens[k].classList.remove('is-active'); });
+    screens[name].classList.add('is-active');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function flash(el, msg, ms) {
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(el._t);
+    el._t = setTimeout(function () { el.classList.remove('show'); }, ms || 2800);
+  }
+
+  /* ================= the runaway button (short hops) ================= */
+  var yes = $('#yes');
+  var no = $('#no');
+  var slot = $('#noSlot');
+  var toast = $('#toast');
+
+  var MAX = 6;
+  var HOP = 120;        /* ระยะหนีสูงสุด (px) — ไม่ไปไกลจากที่เดิม */
+  var dodges = 0;
+  var escaped = false;
+  var base = null;
+  var scale = 1;
+  var tx = 0, ty = 0;
+
+  var NO_LABELS = ['ขอเป็นเพื่อนก่อนนะ', 'ขอเป็นเพื่อนก่อนนะ ♡', 'ยังไม่พร้อมน้า', 'ขอเป็นเพื่อนก่อนน้า', 'แค่เพื่อนก่อนได้มั้ย', 'ก็ได้… คุยก่อนก็ได้ 🥺', 'ก็ได้… คุยกันก่อนก็ได้ 🥺'];
+  var TAUNTS = [
+    'ปุ่มมันขยับหนี…',
+    'ลองอีกทีนะ ♡',
+    'ไม่ทันแล้วล่ะ',
+    'พี่เป็นคนขี้อายจัง',
+    'มันยังไม่ยอมให้กด',
+    'ก็บอกแล้วไงว่าขอเป็นเพื่อนก่อน'
+  ];
+
+  function clamp(v, lo, hi) { return Math.min(Math.max(v, lo), hi); }
+
+  function overlapsYes(x, y, w, h) {
+    var r = yes.getBoundingClientRect();
+    var pad = 12;
+    return !(x + w < r.left - pad || x > r.right + pad || y + h < r.top - pad || y > r.bottom + pad);
+  }
+
+  function flee() {
+    if (dodges >= MAX) return false;
+
+    var r = no.getBoundingClientRect();
+
+    if (!escaped) {
+      escaped = true;
+      base = { left: r.left, top: r.top, w: r.width, h: r.height };
+      slot.style.width = Math.round(r.width) + 'px';
+      slot.style.height = Math.round(r.height) + 'px';
+      no.classList.add('escaped');
+      no.style.width = Math.round(r.width) + 'px';
+      no.style.left = Math.round(r.left) + 'px';
+      no.style.top = Math.round(r.top) + 'px';
+      document.body.appendChild(no);
+    }
+
+    dodges++;
+
+    var pad = 12;
+    var w = base.w, h = base.h;
+    var maxX = Math.max(pad, window.innerWidth - w - pad);
+    var maxY = Math.max(pad, window.innerHeight - h - pad);
+    var best = null;
+
+    for (var i = 0; i < 46; i++) {
+      var ang = Math.random() * Math.PI * 2;
+      var dist = 46 + Math.random() * HOP;
+      var x = clamp(base.left + Math.cos(ang) * dist, pad, maxX);
+      var y = clamp(base.top + Math.sin(ang) * dist, pad, maxY);
+      if (overlapsYes(x, y, w, h)) continue;
+      var moved = Math.hypot(x - base.left, y - base.top);
+      if (!best || moved > best.moved) best = { x: x, y: y, moved: moved };
+      if (i > 8 && moved > 70) break;
+    }
+    if (!best) best = { x: clamp(base.left, pad, maxX), y: clamp(base.top - 54, pad, maxY), moved: 54 };
+
+    tx = best.x - base.left;
+    ty = best.y - base.top;
+    scale = Math.max(0.68, 1 - dodges * 0.05);
+
+    no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ') rotate(' + (Math.random() * 10 - 5).toFixed(1) + 'deg)';
+    no.textContent = NO_LABELS[Math.min(dodges, NO_LABELS.length - 1)];
+    yes.style.setProperty('--grow', (1 + dodges * 0.035).toFixed(3));
+    flash(toast, TAUNTS[Math.min(dodges - 1, TAUNTS.length - 1)]);
+    sfx.dodge();
+
+    if (dodges >= MAX) {
+      /* it finally gives up, back to normal size */
+      no.classList.add('yielded');
+      no.textContent = NO_LABELS[NO_LABELS.length - 1];
+      no.style.transition = 'none';
+      no.style.width = 'auto';
+      no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(1) rotate(0deg)';
+
+      var nr = no.getBoundingClientRect();
+      var dx = 0, dy = 0;
+      if (nr.right > window.innerWidth - pad) dx = window.innerWidth - pad - nr.right;
+      if (nr.left + dx < pad) dx = pad - nr.left;
+      if (nr.bottom > window.innerHeight - pad) dy = window.innerHeight - pad - nr.bottom;
+      if (nr.top + dy < pad) dy = pad - nr.top;
+
+      tx += dx;
+      ty += dy;
+      scale = 1;
+      no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(1) rotate(0deg)';
+      requestAnimationFrame(function () { no.style.transition = ''; });
+      flash(toast, 'เอาละ ๆ … คุยกันก่อนก็ได้ ♡', 3400);
+    }
+
+    return true;
+  }
+
+  /* ---------- FIX: เก็บปุ่มที่หลบไปแล้วทิ้ง เมื่อไปต่อขั้นถัดไป ----------
+     เดิมปุ่มถูกย้ายไปอยู่ที่ document.body แบบ position:fixed แล้วไม่มีใครเอาออก
+     พอผู้ใช้เลี่ยงไปกดปุ่มซ้าย ปุ่มขวาก็ยังลอยค้างทับหน้าถัดไป */
+  function retireNo() {
+    if (!escaped || no.classList.contains('retired')) return;
+    no.classList.remove('yielded');
+    no.classList.add('retired');
+    no.setAttribute('aria-hidden', 'true');
+    no.tabIndex = -1;
+    slot.style.width = '';
+    slot.style.height = '';
+    setTimeout(function () {
+      if (no.classList.contains('retired')) no.hidden = true;
+    }, 320);
+  }
+
+  no.addEventListener('pointerenter', function (e) {
+    if (e.pointerType === 'mouse' && dodges < MAX && !no.classList.contains('retired')) flee();
+  });
+
+  no.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (dodges >= MAX) { accept(); return; }
+    flee();
+  });
+
+  window.addEventListener('resize', function () {
+    if (!escaped) return;
+    var pad = 12;
+    var maxX = Math.max(pad, window.innerWidth - base.w - pad);
+    var maxY = Math.max(pad, window.innerHeight - base.h - pad);
+    var x = clamp(base.left + tx, pad, maxX);
+    var y = clamp(base.top + ty, pad, maxY);
+    tx = x - base.left;
+    ty = y - base.top;
+    no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ') rotate(0deg)';
+  });
+
+  /* ================= typing ================= */
+  async function typeInto(el, text, speed) {
+    el.textContent = '';
+    if (reduce) { el.textContent = text; return; }
+    var caret = document.createElement('i');
+    caret.className = 'caret';
+    el.appendChild(caret);
+    for (var i = 0; i < text.length; i++) {
+      caret.insertAdjacentText('beforebegin', text[i]);
+      await wait(text[i] === ' ' ? 16 : speed);
+    }
+    caret.remove();
+  }
+
+  async function typeLines(container, lines, speed) {
+    container.textContent = '';
+    for (var i = 0; i < lines.length; i++) {
+      var span = document.createElement('span');
+      span.className = 'line';
+      container.appendChild(span);
+      await typeInto(span, lines[i], speed || 42);
+      if (i < lines.length - 1) await wait(240);
+    }
+  }
+
+  var typeEl = $('#type');
+  var finalEl = $('#finalLine');
+  var typed = false;
+
+  /* ================= flow ================= */
+  function accept() {
+    retireNo();                       /* ← แก้บั๊ก: ปุ่มขวาต้องหายไปด้วย */
+    var r = yes.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2, 48, 1.15);
+    sfx.chime();
+    show('plan');
+
+    setTimeout(function () {
+      burst(window.innerWidth * 0.5, window.innerHeight * 0.3, 16, 0.8);
+    }, 340);
+
+    if (!typed) {
+      typed = true;
+      typeLines(typeEl, [
+        'งั้น.... ขออนุญาติจีบพี่จริงๆเลยนะ',
+        'แต่ถ้าเราได้เจอกันครั้งแรก อยากรู้จักอีกนิดหน่อยได้มั่ย'
+      ], 38);
+    }
+  }
+
+  yes.addEventListener('click', accept);
+
+  /* chips */
+  var chipWrap = $('#chips');
+  var chips = $$('.chip', chipWrap);
+  var note = $('#note');
+
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      var on = c.getAttribute('aria-pressed') === 'true';
+      c.setAttribute('aria-pressed', String(!on));
+      sfx.tap();
+      if (!on) {
+        var r = c.getBoundingClientRect();
+        burst(r.left + r.width / 2, r.top + r.height / 2, 7, 0.55);
+      }
+    });
+  });
+
+  function shake(el) {
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+  }
+
+  $('#confirm').addEventListener('click', function () {
+    var picked = chips.filter(function (c) { return c.getAttribute('aria-pressed') === 'true'; });
+
+    if (!picked.length) {
+      flash(note, 'เลือกสักอย่างก่อนนะ ♡');
+      shake(chipWrap);
+      sfx.dodge();
+      return;
+    }
+
+    var names = picked.map(function (c) { return c.dataset.label; });
+    var msg;
+    if (names.length >= 3) {
+      msg = 'เริ่มจาก “' + names[0] + '” → “' + names[1] + '” → “' + names[2] + '” นะ ♡';
+    } else if (names.length === 2) {
+      msg = 'เริ่มจาก “' + names[0] + '” แล้วก็ “' + names[1] + '” นะ ♡';
+    } else {
+      msg = 'เริ่มจาก “' + names[0] + '” ก่อนนะ ♡';
+    }
+
+    show('done');
+    typeInto(finalEl, msg, 34);
+    sfx.chime();
+
+    setTimeout(function () { burst(window.innerWidth / 2, window.innerHeight * 0.34, 70, 1.4); }, 60);
+    setTimeout(function () { burst(window.innerWidth * 0.2, window.innerHeight * 0.5, 24, 0.9); }, 420);
+    setTimeout(function () { burst(window.innerWidth * 0.8, window.innerHeight * 0.5, 24, 0.9); }, 620);
+  });
+
+  /* replay */
+  $('#replay').addEventListener('click', function () {
+    dodges = 0;
+    escaped = false;
+    scale = 1;
+    tx = 0;
+    ty = 0;
+    typed = false;
+
+    no.classList.remove('escaped', 'yielded', 'retired');
+    no.removeAttribute('style');
+    no.removeAttribute('aria-hidden');
+    no.removeAttribute('tabindex');
+    no.hidden = false;
+    no.textContent = NO_LABELS[0];
+    slot.removeAttribute('style');
+    if (no.parentNode !== slot) slot.appendChild(no);
+
+    yes.style.setProperty('--grow', '1');
+    chips.forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
+
+    typeEl.textContent = '';
+    finalEl.textContent = '';
+    toast.textContent = '';
+    note.textContent = '';
+    toast.classList.remove('show');
+    note.classList.remove('show');
+
+    sfx.tap();
+    show('ask');
+  });
+
+  /* sound toggle */
+  var soundBtn = $('#sound');
+  soundBtn.addEventListener('click', function () {
+    soundOn = !soundOn;
+    soundBtn.classList.toggle('muted', !soundOn);
+    soundBtn.setAttribute('aria-pressed', String(soundOn));
+    soundBtn.setAttribute('aria-label', soundOn ? 'ปิดเสียง' : 'เปิดเสียง');
+    if (soundOn) sfx.tap();
+  });
+})();
+</script>
+</body>
+</html>
