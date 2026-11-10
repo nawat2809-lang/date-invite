@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ขอจีบได้มั้ย ♡</title>
+<meta name="description" content="คำถามเล็ก ๆ ที่กล้า ๆ กลัว ๆ … ขอจีบได้มั้ย ♡" />
+<meta name="theme-color" content="#fff7f2" />
+<meta property="og:title" content="ขอจีบได้มั้ย ♡" />
+<meta property="og:description" content="ไม่ได้อยากรีบร้อน แต่อยากทำความรู้จักมากขึ้น" />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *,*::before,*::after{ box-sizing:border-box }
+
+  :root{
+    --cream:#fff7f2;
+    --blush:#ffd9e3;
+    --rose:#df5570;
+    --rose-deep:#b93e5c;
+    --rose-soft:#f690a8;
+    --ink:#43242d;
+    --ink-soft:#8a636d;
+    --gold:#d9a86c;
+    --card:rgba(255,255,255,.74);
+  }
+
+  html,body{ height:100% }
+
+  body{
+    margin:0;
+    min-height:100svh;
+    display:grid;
+    place-items:center;
+    padding:clamp(18px,4vw,52px) clamp(14px,4vw,40px);
+    font-family:'IBM Plex Sans Thai', system-ui, -apple-system, 'Segoe UI', 'Noto Sans Thai', sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    background:
+      radial-gradient(120% 90% at 12% 0%, #fff1f4 0%, rgba(255,241,244,0) 55%),
+      radial-gradient(100% 80% at 92% 8%, #ffe9df 0%, rgba(255,233,223,0) 60%),
+      radial-gradient(130% 100% at 50% 112%, #ffe3ea 0%, rgba(255,227,234,0) 65%),
+      var(--cream);
+    overflow-x:hidden;
+  }
+
+  /* ---------- layers ---------- */
+  #floaters{
+    position:fixed; inset:0; overflow:hidden;
+    pointer-events:none; z-index:0;
+  }
+  .float-heart{
+    position:absolute; top:100%;
+    animation-name:drift; animation-timing-function:linear; animation-iteration-count:infinite;
+    opacity:0; will-change:transform;
+  }
+  #fx{
+    position:fixed; inset:0;
+    pointer-events:none; z-index:6;
+  }
+
+  main{ position:relative; z-index:2; width:min(640px,100%) }
+
+  .screen{ display:none }
+  .screen.is-active{ display:block; animation:rise .8s cubic-bezier(.2,.85,.2,1) both }
+
+  /* ---------- card ---------- */
+  .card{
+    position:relative;
+    text-align:center;
+    padding:clamp(26px,6vw,58px) clamp(20px,5.4vw,52px) clamp(22px,5vw,44px);
+    border-radius:clamp(22px,4vw,34px);
+    border:1px solid rgba(223,85,112,.14);
+    background:var(--card);
+    box-shadow:
+      0 34px 70px -34px rgba(185,62,92,.38),
+      0 1px 0 rgba(255,255,255,.9) inset;
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+  }
+
+  .deco{
+    position:absolute;
+    font-size:clamp(15px,3.4vw,20px);
+    color:rgba(223,85,112,.4);
+    animation:bob 5s ease-in-out infinite;
+    pointer-events:none;
+    user-select:none;
+  }
+  .deco-tl{ top:16px; left:20px }
+  .deco-tr{ top:16px; right:20px; animation-delay:-1.4s }
+  .deco-bl{ bottom:14px; left:22px; animation-delay:-2.6s; color:rgba(217,168,108,.55) }
+  .deco-br{ bottom:14px; right:22px; animation-delay:-3.7s; color:rgba(217,168,108,.55) }
+
+  .badge{
+    margin:0 0 clamp(14px,3vw,22px);
+    font-size:.68rem;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--rose);
+    display:flex; align-items:center; justify-content:center; gap:.85em;
+  }
+  .badge::before,.badge::after{
+    content:''; height:1px; width:clamp(18px,7vw,46px);
+    background:linear-gradient(90deg, rgba(223,85,112,0), rgba(223,85,112,.55));
+  }
+  .badge::after{ transform:scaleX(-1) }
+
+  h1{
+    font-family:'Mali', 'IBM Plex Sans Thai', cursive;
+    font-weight:600;
+    font-size:clamp(2.5rem,9vw,4.3rem);
+    line-height:1.22;
+    letter-spacing:-.01em;
+    margin:.1em 0 .35em;
+    padding-bottom:.06em;
+    background:linear-gradient(160deg,#b93e5c 0%, #df5570 46%, #e8849c 100%);
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent; -webkit-text-fill-color:transparent;
+  }
+
+  h2{
+    font-family:'Mali', 'IBM Plex Sans Thai', cursive;
+    font-weight:600;
+    font-size:clamp(1.55rem,5.4vw,2.2rem);
+    line-height:1.35;
+    color:var(--rose-deep);
+    margin:.1em 0 .6em;
+  }
+
+  .lead{
+    margin:0 auto;
+    max-width:34ch;
+    font-weight:300;
+    font-size:clamp(.98rem,2.9vw,1.08rem);
+    line-height:2;
+    color:var(--ink-soft);
+  }
+  .lead em{
+    font-style:normal; font-weight:500; color:var(--rose-deep);
+    background:linear-gradient(transparent 62%, rgba(255,192,208,.85) 62%);
+  }
+
+  .hint{
+    margin:clamp(18px,3.4vw,26px) 0 0;
+    font-size:.86rem;
+    letter-spacing:.02em;
+    color:rgba(138,99,109,.9);
+  }
+
+  .progress{
+    margin:0 0 clamp(12px,2.6vw,18px);
+    font-size:.72rem;
+    letter-spacing:.2em;
+    color:var(--rose);
+  }
+
+  /* ---------- buttons ---------- */
+  .choices{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+    gap:clamp(10px,2.4vw,14px);
+    margin-top:clamp(20px,4vw,30px);
+  }
+  .no-slot{ display:inline-flex }
+
+  .btn{
+    font:inherit;
+    font-size:clamp(.96rem,2.6vw,1.05rem);
+    font-weight:500;
+    line-height:1.25;
+    padding:.9em 1.85em;
+    border-radius:999px;
+    border:1.5px solid transparent;
+    cursor:pointer;
+    white-space:nowrap;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+    transition:transform .26s cubic-bezier(.2,.85,.2,1), box-shadow .26s, background .26s, color .26s, border-color .26s, filter .26s;
+  }
+
+  .btn.primary{
+    color:#fff;
+    background:linear-gradient(135deg,#e8607d 0%, #cb4a6b 58%, #b93e5c 100%);
+    box-shadow:0 16px 30px -14px rgba(185,62,92,.8), 0 1px 0 rgba(255,255,255,.4) inset;
+    transform:scale(var(--grow,1));
+  }
+  .btn.primary:hover{ transform:translateY(-3px) scale(var(--grow,1)); filter:brightness(1.06) }
+  .btn.primary:active{ transform:translateY(0) scale(calc(var(--grow,1) * .97)) }
+
+  .btn.ghost{
+    color:var(--rose-deep);
+    background:rgba(255,255,255,.62);
+    border-color:rgba(223,85,112,.34);
+  }
+  .btn.ghost:hover{ background:#fff; border-color:rgba(223,85,112,.62); transform:translateY(-2px) }
+
+  .btn:focus-visible{
+    outline:2px solid rgba(185,62,92,.55);
+    outline-offset:3px;
+  }
+
+  /* the runaway button */
+  .btn.escaped{
+    position:fixed;
+    z-index:20;
+    margin:0;
+    transition:transform .46s cubic-bezier(.34,1.6,.5,1), background .26s, color .26s, border-color .26s, box-shadow .26s;
+    will-change:transform;
+  }
+  .btn.escaped.yielded{
+    background:linear-gradient(135deg,#ffe6ec, #ffcfdd);
+    color:var(--rose-deep);
+    border-color:rgba(223,85,112,.5);
+    box-shadow:0 12px 26px -16px rgba(185,62,92,.7);
+    animation:pulse-soft 2.2s ease-out infinite;
+  }
+
+  /* ---------- messages ---------- */
+  .toast,.note{
+    min-height:1.55em;
+    margin:clamp(12px,2.4vw,16px) 0 0;
+    font-size:.88rem;
+    color:var(--ink-soft);
+    opacity:0;
+    transform:translateY(-4px);
+    transition:opacity .32s ease, transform .32s ease;
+  }
+  .toast.show,.note.show{ opacity:1; transform:none }
+
+  .sign{
+    margin:clamp(16px,3vw,26px) 0 0;
+    font-size:.74rem;
+    letter-spacing:.14em;
+    color:rgba(138,99,109,.72);
+  }
+
+  /* ---------- step 2 ---------- */
+  .type{
+    margin:0 auto .2em;
+    min-height:3.4em;
+    max-width:36ch;
+    font-size:clamp(1rem,2.9vw,1.1rem);
+    line-height:1.7;
+    font-weight:400;
+    color:var(--ink);
+  }
+  .type .line{ display:block }
+
+  .caret{
+    display:inline-block;
+    width:.46ch; height:1.02em;
+    margin-left:.06em;
+    vertical-align:-.15em;
+    border-radius:2px;
+    background:var(--rose-soft);
+    animation:blink .9s steps(2,start) infinite;
+  }
+
+  .sub{
+    margin:clamp(12px,2.4vw,16px) auto 0;
+    max-width:36ch;
+    font-size:.9rem;
+    font-weight:300;
+    line-height:1.95;
+    color:var(--ink-soft);
+  }
+
+  .chips{
+    display:flex; flex-wrap:wrap; justify-content:center;
+    gap:clamp(8px,2vw,11px);
+    margin-top:clamp(18px,3.6vw,26px);
+  }
+  .chips.shake{ animation:shake .45s ease }
+
+  .chip{
+    position:relative;
+    font:inherit;
+    font-size:.9rem;
+    line-height:1.3;
+    padding:.6em 1.05em;
+    border-radius:999px;
+    border:1.5px solid rgba(223,85,112,.24);
+    background:rgba(255,255,255,.66);
+    color:var(--ink);
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+    transition:transform .22s cubic-bezier(.2,.85,.2,1), background .22s, border-color .22s, color .22s, box-shadow .22s;
+  }
+  .chip:hover{ transform:translateY(-2px); background:#fff; border-color:rgba(223,85,112,.45) }
+  .chip[aria-pressed="true"]{
+    background:linear-gradient(135deg,#ffe4ec, #ffd0dd);
+    border-color:rgba(223,85,112,.55);
+    color:var(--rose-deep);
+    box-shadow:0 10px 20px -14px rgba(185,62,92,.9);
+  }
+  .chip:focus-visible{ outline:2px solid rgba(185,62,92,.5); outline-offset:2px }
+
+  /* ---------- final ---------- */
+  .bigheart{
+    font-size:clamp(3.4rem,13vw,5rem);
+    line-height:1;
+    margin:0 0 .18em;
+    color:var(--rose);
+    animation:beat 1.8s ease-in-out infinite;
+    text-shadow:0 16px 34px rgba(185,62,92,.35);
+  }
+  .final-line{
+    min-height:1.8em;
+    margin:0 auto;
+    max-width:34ch;
+    font-family:'Mali', 'IBM Plex Sans Thai', cursive;
+    font-size:clamp(1.05rem,3.4vw,1.3rem);
+    line-height:1.6;
+    color:var(--rose-deep);
+  }
+
+  /* ---------- sound ---------- */
+  .sound{
+    position:fixed; top:14px; right:14px; z-index:30;
+    width:40px; height:40px;
+    display:grid; place-items:center;
+    font-size:1rem;
+    color:var(--rose-deep);
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(223,85,112,.22);
+    border-radius:50%;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    box-shadow:0 10px 22px -16px rgba(185,62,92,.9);
+    transition:transform .2s, background .2s;
+  }
+  .sound:hover{ transform:scale(1.06); background:#fff }
+  .sound.muted{ color:rgba(138,99,109,.55) }
+  .sound.muted::after{
+    content:'';
+    position:absolute; width:60%; height:1.5px;
+    background:currentColor; border-radius:2px;
+    transform:rotate(-45deg);
+  }
+
+  /* ---------- motion ---------- */
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(18px) scale(.985) }
+    to{ opacity:1; transform:none }
+  }
+  @keyframes drift{
+    0%{ transform:translateY(0) rotate(0deg); opacity:0 }
+    8%{ opacity:.5 }
+    85%{ opacity:.32 }
+    100%{ transform:translateY(-118vh) rotate(200deg); opacity:0 }
+  }
+  @keyframes bob{
+    0%,100%{ transform:translateY(0) rotate(-4deg) }
+    50%{ transform:translateY(-6px) rotate(5deg) }
+  }
+  @keyframes blink{ 50%{ opacity:0 } }
+  @keyframes beat{
+    0%,100%{ transform:scale(1) }
+    18%{ transform:scale(1.1) }
+    36%{ transform:scale(1) }
+    54%{ transform:scale(1.06) }
+  }
+  @keyframes pulse-soft{
+    0%{ box-shadow:0 0 0 0 rgba(223,85,112,.42) }
+    70%{ box-shadow:0 0 0 16px rgba(223,85,112,0) }
+    100%{ box-shadow:0 0 0 0 rgba(223,85,112,0) }
+  }
+  @keyframes shake{
+    0%,100%{ transform:translateX(0) }
+    20%{ transform:translateX(-7px) }
+    40%{ transform:translateX(6px) }
+    60%{ transform:translateX(-4px) }
+    80%{ transform:translateX(3px) }
+  }
+
+  @media (max-width:400px){
+    .btn{ padding:.85em 1.5em }
+    .lead{ font-size:.95rem }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important }
+    #floaters{ display:none }
+  }
+</style>
+</head>
+<body>
+
+<div id="floaters" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<button class="sound" id="sound" type="button" aria-pressed="true" aria-label="ปิดเสียง">♪</button>
+
+<main>
+
+  <!-- ============ STEP 1 ============ -->
+  <section class="screen is-active" id="screen-ask" aria-labelledby="ask-title">
+    <div class="card">
+      <span class="deco deco-tl" aria-hidden="true">♡</span>
+      <span class="deco deco-tr" aria-hidden="true">✧</span>
+      <span class="deco deco-bl" aria-hidden="true">✦</span>
+      <span class="deco deco-br" aria-hidden="true">♡</span>
+
+      <p class="badge">A little question for you</p>
+      <h1 id="ask-title">ขอจีบได้มั้ย</h1>
+      <p class="lead">ไม่ได้อยากรีบร้อน<br />แต่อยากทำความรู้จักมากขึ้น<br />อยากทำให้ทุกวันของ<em>พี่</em>ยิ้มได้ ♡</p>
+
+      <p class="hint" id="hint">ลองเลือกคำตอบดูสิ ♡</p>
+
+      <div class="choices">
+        <button class="btn primary" id="yes" type="button">♡ จีบหน่อยได้ไหม</button>
+        <span class="no-slot" id="noSlot">
+          <button class="btn ghost" id="no" type="button">ไม่ให้จีบ</button>
+        </span>
+      </div>
+
+      <p class="toast" id="toast" role="status" aria-live="polite"></p>
+      <p class="sign">— น้องหมาซามอย</p>
+    </div>
+  </section>
+
+  <!-- ============ STEP 2 ============ -->
+  <section class="screen" id="screen-plan" aria-labelledby="plan-title">
+    <div class="card">
+      <span class="deco deco-tl" aria-hidden="true">♡</span>
+      <span class="deco deco-br" aria-hidden="true">✧</span>
+
+      <p class="progress">ขั้นที่ 2 จาก 2</p>
+      <h2 id="plan-title">ดีใจจังเลย ♡</h2>
+      <p class="type" id="type"></p>
+      <p class="sub">ถ้าพี่ไม่รังเกียจ เลือกสิ่งที่อยากให้เริ่มก่อนได้เลย<br />เลือกได้หลายอย่างนะ</p>
+
+      <div class="chips" id="chips">
+        <button class="chip" type="button" aria-pressed="false" data-label="พาไปกินของอร่อย">🍜 พาไปกินของอร่อย</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="ดูหนังด้วยกัน">🎬 ดูหนังด้วยกัน</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="เดินเล่นคุยกันเรื่อยเปื่อย">🌙 เดินเล่นคุยกัน</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="ส่งเพลงให้ฟังทุกวัน">🎧 ส่งเพลงให้ฟัง</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="ถ่ายรูปคู่กันสักรูป">📷 ถ่ายรูปคู่กัน</button>
+        <button class="chip" type="button" aria-pressed="false" data-label="แค่คุยกันทุกวันก็พอ">♡ แค่คุยกันทุกวัน</button>
+      </div>
+
+      <p class="note" id="note" role="status" aria-live="polite"></p>
+
+      <div class="choices">
+        <button class="btn primary" id="confirm" type="button">ตกลง ♡</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP 3 ============ -->
+  <section class="screen" id="screen-done" aria-labelledby="done-title">
+    <div class="card">
+      <span class="deco deco-tl" aria-hidden="true">✧</span>
+      <span class="deco deco-tr" aria-hidden="true">♡</span>
+      <span class="deco deco-bl" aria-hidden="true">♡</span>
+      <span class="deco deco-br" aria-hidden="true">✦</span>
+
+      <div class="bigheart" aria-hidden="true">♥</div>
+      <p class="progress">จากนี้ไป</p>
+      <h2 id="done-title">ขอบคุณนะ พี่ ♡</h2>
+      <p class="final-line" id="finalLine"></p>
+      <p class="sub">เก็บความกล้าครั้งนี้ไว้ในกระเป๋าเสื้อแล้ว<br />แล้วเจอกันนะ ♡</p>
+
+      <div class="choices">
+        <button class="btn ghost" id="replay" type="button">เริ่มใหม่อีกครั้ง</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<noscript>
+  <p style="text-align:center;font-family:sans-serif">หน้านี้ต้องเปิดใช้งาน JavaScript นะ ♡</p>
+</noscript>
+
+<script>
+(function () {
+  'use strict';
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+
+  /* ================= sound ================= */
+  var ac = null, soundOn = true;
+
+  function audio() {
+    if (!ac) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ac = new AC();
+    }
+    if (ac.state === 'suspended') ac.resume();
+    return ac;
+  }
+
+  function tone(freq, dur, type, vol, delay) {
+    if (!soundOn) return;
+    var c = audio();
+    if (!c) return;
+    var t0 = c.currentTime + (delay || 0);
+    var osc = c.createOscillator();
+    var g = c.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.linearRampToValueAtTime(vol == null ? 0.05 : vol, t0 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(g);
+    g.connect(c.destination);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.06);
+  }
+
+  var sfx = {
+    tap: function () { tone(760, 0.1, 'sine', 0.028); },
+    dodge: function () { tone(320, 0.1, 'square', 0.024); tone(430, 0.11, 'triangle', 0.022, 0.05); },
+    chime: function () {
+      tone(659.25, 0.55, 'sine', 0.042);
+      tone(987.77, 0.6, 'sine', 0.03, 0.08);
+      tone(1318.5, 0.75, 'sine', 0.019, 0.16);
+    }
+  };
+
+  /* ================= particles ================= */
+  var cv = $('#fx');
+  var g = cv.getContext('2d');
+  var W = 0, H = 0, DPR = 1, running = false;
+  var parts = [];
+  var PALETTE = ['#df5570', '#f690a8', '#ffb3c6', '#d9a86c', '#ffd0dd', '#e8607d'];
+
+  function sizeCanvas() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    cv.width = Math.round(W * DPR);
+    cv.height = Math.round(H * DPR);
+    cv.style.width = W + 'px';
+    cv.style.height = H + 'px';
+    g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
+
+  function drawHeart(x, y, s, rot, color, alpha) {
+    g.save();
+    g.translate(x, y);
+    g.rotate(rot);
+    g.scale(s, s);
+    g.globalAlpha = alpha;
+    g.fillStyle = color;
+    g.beginPath();
+    g.moveTo(0, 0.35);
+    g.bezierCurveTo(-0.95, -0.25, -0.55, -1.05, 0, -0.55);
+    g.bezierCurveTo(0.55, -1.05, 0.95, -0.25, 0, 0.35);
+    g.closePath();
+    g.fill();
+    g.restore();
+  }
+
+  function start() {
+    if (running) return;
+    running = true;
+    requestAnimationFrame(frame);
+  }
+
+  function frame() {
+    g.clearRect(0, 0, W, H);
+    for (var i = parts.length - 1; i >= 0; i--) {
+      var p = parts[i];
+      p.vy += 0.045;
+      p.vx *= 0.994;
+      p.vy *= 0.995;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.a -= p.decay;
+      if (p.a <= 0 || p.y > H + 70 || p.x < -80 || p.x > W + 80) {
+        parts.splice(i, 1);
+        continue;
+      }
+      drawHeart(p.x, p.y, p.s / 14, p.rot, p.color, Math.max(0, p.a));
+    }
+    if (parts.length) requestAnimationFrame(frame);
+    else { running = false; g.clearRect(0, 0, W, H); }
+  }
+
+  function burst(x, y, count, power) {
+    var n = reduce ? Math.min(8, count) : count;
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2;
+      var sp = (0.45 + Math.random() * 1.7) * (power || 1);
+      parts.push({
+        x: x, y: y,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp - 1.25,
+        s: 7 + Math.random() * 11,
+        rot: Math.random() * Math.PI * 2,
+        vr: (Math.random() - 0.5) * 0.16,
+        a: 1,
+        decay: 0.007 + Math.random() * 0.012,
+        color: PALETTE[(Math.random() * PALETTE.length) | 0]
+      });
+    }
+    start();
+  }
+
+  var lastTrail = 0;
+  window.addEventListener('pointermove', function (e) {
+    if (reduce || e.pointerType !== 'mouse') return;
+    var now = performance.now();
+    if (now - lastTrail < 95) return;
+    lastTrail = now;
+    parts.push({
+      x: e.clientX + (Math.random() * 18 - 9),
+      y: e.clientY + (Math.random() * 12 - 6),
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: -0.5 - Math.random() * 0.6,
+      s: 5 + Math.random() * 5,
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.1,
+      a: 0.55,
+      decay: 0.024,
+      color: PALETTE[(Math.random() * PALETTE.length) | 0]
+    });
+    start();
+  }, { passive: true });
+
+  /* floating hearts in the background */
+  (function floaties() {
+    if (reduce) return;
+    var layer = $('#floaters');
+    var glyphs = ['♡', '♥', '✧', '✦', '❥'];
+    var colors = ['#f690a8', '#ffb3c6', '#d9a86c', '#e8607d'];
+    for (var i = 0; i < 10; i++) {
+      var s = document.createElement('span');
+      s.className = 'float-heart';
+      s.textContent = glyphs[(Math.random() * glyphs.length) | 0];
+      s.style.left = (Math.random() * 100).toFixed(2) + 'vw';
+      s.style.fontSize = (12 + Math.random() * 22).toFixed(0) + 'px';
+      s.style.animationDuration = (15 + Math.random() * 17).toFixed(0) + 's';
+      s.style.animationDelay = (-Math.random() * 26).toFixed(1) + 's';
+      s.style.color = colors[(Math.random() * colors.length) | 0];
+      layer.appendChild(s);
+    }
+  })();
+
+  /* ================= screens ================= */
+  var screens = {
+    ask: $('#screen-ask'),
+    plan: $('#screen-plan'),
+    done: $('#screen-done')
+  };
+
+  function show(name) {
+    Object.keys(screens).forEach(function (k) { screens[k].classList.remove('is-active'); });
+    screens[name].classList.add('is-active');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function flash(el, msg, ms) {
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(el._t);
+    el._t = setTimeout(function () { el.classList.remove('show'); }, ms || 2800);
+  }
+
+  /* ================= the runaway button ================= */
+  var yes = $('#yes');
+  var no = $('#no');
+  var slot = $('#noSlot');
+  var toast = $('#toast');
+
+  var MAX = 6;
+  var dodges = 0;
+  var escaped = false;
+  var base = null;
+  var scale = 1;
+  var tx = 0, ty = 0;
+
+  var NO_LABELS = ['ไม่ให้จีบ', 'ไม่ให้จีบ!', 'เอ๊ะ… อย่ากดสิ', 'ไม่จริงอ่ะ', 'ใจร้าย 🥺', 'แค่คุยก่อนก็ได้นะ', 'ก็ได้… จีบก็ได้ 🥺'];
+  var TAUNTS = [
+    'ปุ่มมันหนีไปแล้ว…',
+    'ลองอีกทีนะ ♡',
+    'ไม่ทันแล้วล่ะ',
+    'พี่ใจร้ายจัง',
+    'มันไม่ยอมให้กดจริง ๆ',
+    'ก็บอกแล้วไงว่าไม่ให้จีบ'
+  ];
+
+  function flee() {
+    if (dodges >= MAX) return false;
+
+    var r = no.getBoundingClientRect();
+
+    if (!escaped) {
+      escaped = true;
+      base = { left: r.left, top: r.top, w: r.width, h: r.height };
+      slot.style.width = Math.round(r.width) + 'px';
+      slot.style.height = Math.round(r.height) + 'px';
+      no.classList.add('escaped');
+      no.style.width = Math.round(r.width) + 'px';
+      no.style.left = Math.round(r.left) + 'px';
+      no.style.top = Math.round(r.top) + 'px';
+      document.body.appendChild(no);
+    }
+
+    dodges++;
+
+    var pad = 14;
+    var w = base.w, h = base.h;
+    var maxX = Math.max(pad, window.innerWidth - w - pad);
+    var maxY = Math.max(pad, window.innerHeight - h - pad);
+    var yr = yes.getBoundingClientRect();
+    var ycx = yr.left + yr.width / 2;
+    var ycy = yr.top + yr.height / 2;
+    var best = null;
+
+    for (var i = 0; i < 28; i++) {
+      var x = pad + Math.random() * Math.max(1, maxX - pad);
+      var y = pad + Math.random() * Math.max(1, maxY - pad);
+      var dYes = Math.hypot(x + w / 2 - ycx, y + h / 2 - ycy);
+      if (dYes < 80) continue;
+      var dOrig = Math.hypot(x - base.left, y - base.top);
+      var score = dYes + dOrig * 0.45 + Math.random() * 50;
+      if (!best || score > best.score) best = { x: x, y: y, score: score };
+    }
+    if (!best) best = { x: pad, y: Math.max(pad, maxY - pad) };
+
+    tx = best.x - base.left;
+    ty = best.y - base.top;
+    scale = Math.max(0.6, 1 - dodges * 0.06);
+
+    no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ') rotate(' + (Math.random() * 12 - 6).toFixed(1) + 'deg)';
+    no.textContent = NO_LABELS[Math.min(dodges, NO_LABELS.length - 1)];
+    yes.style.setProperty('--grow', (1 + dodges * 0.045).toFixed(3));
+    flash(toast, TAUNTS[Math.min(dodges - 1, TAUNTS.length - 1)]);
+    sfx.dodge();
+
+    if (dodges >= MAX) {
+      /* it finally gives up */
+      no.classList.add('yielded');
+      no.textContent = NO_LABELS[NO_LABELS.length - 1];
+      no.style.transition = 'none';
+      no.style.width = 'auto';
+      no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(1) rotate(0deg)';
+
+      var nr = no.getBoundingClientRect();
+      var dx = 0, dy = 0;
+      if (nr.right > window.innerWidth - pad) dx = window.innerWidth - pad - nr.right;
+      if (nr.left + dx < pad) dx = pad - nr.left;
+      if (nr.bottom > window.innerHeight - pad) dy = window.innerHeight - pad - nr.bottom;
+      if (nr.top + dy < pad) dy = pad - nr.top;
+
+      tx += dx;
+      ty += dy;
+      scale = 1;
+      no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(1) rotate(0deg)';
+      requestAnimationFrame(function () { no.style.transition = ''; });
+      flash(toast, 'เอาละ ๆ … ยอมแล้วก็ได้ ♡', 3400);
+    }
+
+    return true;
+  }
+
+  no.addEventListener('pointerenter', function (e) {
+    if (e.pointerType === 'mouse' && dodges < MAX) flee();
+  });
+
+  no.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (dodges >= MAX) { accept(); return; }
+    flee();
+  });
+
+  window.addEventListener('resize', function () {
+    if (!escaped) return;
+    var pad = 14;
+    var maxX = Math.max(pad, window.innerWidth - base.w - pad);
+    var maxY = Math.max(pad, window.innerHeight - base.h - pad);
+    var x = Math.min(Math.max(pad, base.left + tx), maxX);
+    var y = Math.min(Math.max(pad, base.top + ty), maxY);
+    tx = x - base.left;
+    ty = y - base.top;
+    no.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ') rotate(0deg)';
+  });
+
+  /* ================= typing ================= */
+  async function typeInto(el, text, speed) {
+    el.textContent = '';
+    if (reduce) { el.textContent = text; return; }
+    var caret = document.createElement('i');
+    caret.className = 'caret';
+    el.appendChild(caret);
+    for (var i = 0; i < text.length; i++) {
+      caret.insertAdjacentText('beforebegin', text[i]);
+      await wait(text[i] === ' ' ? 16 : speed);
+    }
+    caret.remove();
+  }
+
+  async function typeLines(container, lines, speed) {
+    container.textContent = '';
+    for (var i = 0; i < lines.length; i++) {
+      var span = document.createElement('span');
+      span.className = 'line';
+      container.appendChild(span);
+      await typeInto(span, lines[i], speed || 42);
+      if (i < lines.length - 1) await wait(240);
+    }
+  }
+
+  var typeEl = $('#type');
+  var finalEl = $('#finalLine');
+  var typed = false;
+
+  /* ================= flow ================= */
+  function accept() {
+    var r = yes.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2, 48, 1.15);
+    sfx.chime();
+    show('plan');
+
+    setTimeout(function () {
+      burst(window.innerWidth * 0.5, window.innerHeight * 0.3, 16, 0.8);
+    }, 340);
+
+    if (!typed) {
+      typed = true;
+      typeLines(typeEl, ['งั้น… ขออนุญาตจีบจริง ๆ นะ ♡', 'แต่ก่อนอื่น ขอรู้จักพี่มากขึ้นอีกหน่อยได้มั้ย']);
+    }
+  }
+
+  yes.addEventListener('click', accept);
+
+  /* chips */
+  var chipWrap = $('#chips');
+  var chips = $$('.chip', chipWrap);
+  var note = $('#note');
+
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      var on = c.getAttribute('aria-pressed') === 'true';
+      c.setAttribute('aria-pressed', String(!on));
+      sfx.tap();
+      if (!on) {
+        var r = c.getBoundingClientRect();
+        burst(r.left + r.width / 2, r.top + r.height / 2, 7, 0.55);
+      }
+    });
+  });
+
+  function shake(el) {
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+  }
+
+  $('#confirm').addEventListener('click', function () {
+    var picked = chips.filter(function (c) { return c.getAttribute('aria-pressed') === 'true'; });
+
+    if (!picked.length) {
+      flash(note, 'เลือกสักอย่างก่อนนะ ♡');
+      shake(chipWrap);
+      sfx.dodge();
+      return;
+    }
+
+    var names = picked.map(function (c) { return c.dataset.label; });
+    var msg;
+    if (names.length >= 2) msg = 'เริ่มจาก “' + names[0] + '” แล้วก็ “' + names[1] + '” นะ ♡';
+    else msg = 'เริ่มจาก “' + names[0] + '” ก่อนนะ ♡';
+
+    show('done');
+    typeInto(finalEl, msg, 34);
+    sfx.chime();
+
+    setTimeout(function () { burst(window.innerWidth / 2, window.innerHeight * 0.34, 70, 1.4); }, 60);
+    setTimeout(function () { burst(window.innerWidth * 0.2, window.innerHeight * 0.5, 24, 0.9); }, 420);
+    setTimeout(function () { burst(window.innerWidth * 0.8, window.innerHeight * 0.5, 24, 0.9); }, 620);
+  });
+
+  /* replay */
+  $('#replay').addEventListener('click', function () {
+    dodges = 0;
+    escaped = false;
+    scale = 1;
+    tx = 0;
+    ty = 0;
+    typed = false;
+
+    no.classList.remove('escaped', 'yielded');
+    no.removeAttribute('style');
+    no.textContent = NO_LABELS[0];
+    slot.removeAttribute('style');
+    if (no.parentNode !== slot) slot.appendChild(no);
+
+    yes.style.setProperty('--grow', '1');
+    chips.forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
+
+    typeEl.textContent = '';
+    finalEl.textContent = '';
+    toast.textContent = '';
+    note.textContent = '';
+    toast.classList.remove('show');
+    note.classList.remove('show');
+
+    sfx.tap();
+    show('ask');
+  });
+
+  /* sound toggle */
+  var soundBtn = $('#sound');
+  soundBtn.addEventListener('click', function () {
+    soundOn = !soundOn;
+    soundBtn.classList.toggle('muted', !soundOn);
+    soundBtn.setAttribute('aria-pressed', String(soundOn));
+    soundBtn.setAttribute('aria-label', soundOn ? 'ปิดเสียง' : 'เปิดเสียง');
+    if (soundOn) sfx.tap();
+  });
+})();
+</script>
+</body>
+</html>
