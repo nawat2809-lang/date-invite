@@ -1,0 +1,40 @@
+HOW IT WORKS - Don't Melt
+JIN2 · @jin_22ee
+
+The whole artwork is one Python file. A little 3D snowman is built from
+points, seen through a fixed camera, and every cell of the screen
+becomes a letter.
+
+1. The snowman
+   Three blocks of snow, 12, 10 and 8 voxels wide, stacked from large to
+   small. Each block is covered in points. Eyes, smile and buttons are
+   voxels on the front face that are left out, so they show up as black
+   squares. Two sticks make the arms, and one of them twitches now and then.
+
+2. Building in
+   At the start the letters gather from the bottom up. One point in ten
+   flies in from the dark, the rest fade in where they belong.
+
+3. Snowfall
+   420 flakes drift down around him at different speeds. Nearer flakes
+   are brighter.
+
+4. Melting
+   Twelve times, a small chunk of snow comes loose, top edges first, left
+   and right taking turns. Each piece falls with real gravity, bounces
+   twice, skids until friction stops it, and melts into a blue puddle.
+   His face and buttons never fall off. As he melts he gets a little
+   shorter and wider at the base, and the temperature on screen rises.
+
+5. From points to letters
+   Points are drawn far to near, so nearer ones paint over farther ones.
+   Brighter surfaces get denser letters (from : and ; up to 8 B $ #).
+   Outlines use / | \ - _ following the edge direction.
+   Falling flakes are . + *, the puddle is ~.
+   Each frame fades into the next and a soft glow is added on top.
+
+Things you can try (for yourself)
+   EYES, SMILE     where his face squares sit
+   THUDS           when each chunk falls
+   FLAKES          how much snow falls
+   TAG_COLOR       the colours

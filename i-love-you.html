@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>I LOVE YOU · หัวใจจากคำบอกรัก 114 ภาษา</title>
+<style>
+  :root{ color-scheme:dark; --pink:#ff7ab6; --dim:#8b8290; }
+  *{ box-sizing:border-box }
+  html,body{ height:100%; margin:0 }
+  body{
+    background:radial-gradient(ellipse at 50% 45%, #2a0416 0%, #07020a 62%), #07020a;
+    color:#ffd6e6;
+    font-family:ui-monospace,"SF Mono",Consolas,"Cascadia Mono",Menlo,monospace;
+    overflow:hidden;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    display:flex; align-items:center; justify-content:center;
+    padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);
+  }
+  #stage{
+    width:min(96vw, calc(86vh * 1.125));
+    max-width:1080px;
+    aspect-ratio:1080 / 960;
+    height:auto;
+    display:block;
+    touch-action:manipulation;
+  }
+  .hud{
+    position:fixed; left:clamp(14px,3vw,64px); bottom:clamp(12px,3vh,42px);
+    font-size:clamp(10px,1.6vw,13px); line-height:1.55; color:var(--dim);
+    pointer-events:none; letter-spacing:.02em;
+    text-shadow:0 1px 8px rgba(0,0,0,.8);
+  }
+  .hud .clock{ color:var(--pink); margin-bottom:6px }
+  .hud a{ color:#b98aa6; text-decoration:none; border-bottom:1px dotted rgba(185,138,166,.5); pointer-events:auto }
+  .hint{
+    position:fixed; right:clamp(14px,3vw,64px); bottom:clamp(12px,3vh,42px);
+    font-size:clamp(9px,1.4vw,12px); color:rgba(139,130,144,.75);
+    pointer-events:none; text-align:right;
+  }
+  @media (max-width:560px){ .hint{ display:none } }
+</style>
+</head>
+<body>
+<canvas id="stage" aria-label="หัวใจที่ประกอบขึ้นจากคำว่า I love you ใน 114 ภาษา หมุนช้า ๆ พร้อมแสงสะท้อนแบบ chrome" role="img"></canvas>
+
+<div class="hud">
+  <div class="clock" id="clock">t 00.00s</div>
+  <div id="stat">languages 114</div>
+  <div>after JIN2 · <a href="https://github.com/JIN2-ASCII/-JIN2-ASCII/tree/main/I-LOVE-YOU" target="_blank" rel="noopener">@jin_22ee</a> · canvas port</div>
+</div>
+<div class="hint">แตะ / Space = หยุดชั่วคราว · R = เริ่มใหม่</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- คำบอกรัก 114 ภาษา (จากผลงานของ JIN2) ---------- */
+  var PHRASES = [
+    "I love you", "사랑해", "愛してる", "我爱你", "Je t'aime", "Te quiero", "Ich liebe dich", "Ti amo",
+    "Eu te amo", "Я тебя люблю", "أحبك", "मैं तुमसे प्यार करता हूँ", "ฉันรักคุณ", "Anh yêu em",
+    "Seni seviyorum", "Σ' αγαπώ", "אני אוהב אותך", "Ik hou van jou", "Jag älskar dig", "Jeg elsker deg",
+    "Jeg elsker dig", "Minä rakastan sinua", "Kocham cię", "Miluji tě", "Szeretlek", "Te iubesc",
+    "Aku cinta kamu", "Saya cintakan awak", "Mahal kita", "Nakupenda", "دوستت دارم", "আমি তোমাকে ভালোবাসি",
+    "நான் உன்னை காதலிக்கிறேன்", "Я тебе кохаю", "Tá grá agam duit", "Ég elska þig", "Aloha au iā ʻoe",
+    "Mi amas vin", "Te amo", "Ես քեզ սիրում եմ", "მიყვარხარ", "እወድሃለሁ", "Би чамд хайртай",
+    "ខ្ញុំស្រលាញ់អ្នក", "ຂ້ອຍຮັກເຈົ້າ", "ချစ်တယ်", "म तिमीलाई माया गर्छु", "T'estimo", "Maite zaitut",
+    "Rwy'n dy garu di", "Ngiyakuthanda", "我愛你", "Volim te", "Волим те", "Обичам те", "Ľúbim ťa",
+    "Aš tave myliu", "Es tevi mīlu", "Ma armastan sind", "Të dua", "Ljubim te", "Те сакам", "Я цябе кахаю",
+    "Мен сені жақсы көремін", "Men seni sevaman", "Səni sevirəm", "Мен сени сүйөм", "Ман туро дӯст медорам",
+    "Men seni söýýärin", "زه تا سره مینه لرم", "میں تم سے محبت کرتا ہوں", "Ez ji te hez dikim",
+    "ਮੈਂ ਤੈਨੂੰ ਪਿਆਰ ਕਰਦਾ ਹਾਂ", "હું તને પ્રેમ કરું છું", "मी तुझ्यावर प्रेम करतो", "నేను నిన్ను ప్రేమిస్తున్నాను",
+    "ನಾನು ನಿನ್ನನ್ನು ಪ್ರೀತಿಸುತ್ತೇನೆ", "ഞാൻ നിന്നെ സ്നേഹിക്കുന്നു", "මම ඔයාට ආදරෙයි", "ମୁଁ ତୁମକୁ ଭଲ ପାଏ",
+    "ངས་ཁྱེད་ལ་དགའ་པོ་ཡོད།", "Aku tresna marang kowe", "Abdi bogoh ka anjeun", "Gihigugma tika",
+    "Kuv hlub koj", "Tiako ianao", "Waan ku jeclahay", "Ina son ka", "A hụrụ m gị n'anya",
+    "Ek is lief vir jou", "Ndiyakuthanda", "Ndinokuda", "Ndagukunda", "Ou te alofa ia te oe", "'Ofa atu",
+    "Au domoni iko", "Ua here au ia oe", "Munakuyki", "Rohayhu", "Asavakkit", "Ech hunn dech gär",
+    "Tha gaol agam ort", "Da garout a ran", "Ti tengu caru", "Inħobbok", "Ik hâld fan dy",
+    "איך האָב דיך ליב", "Eg elski teg", "Quérote", "T'aimi", "مەن سېنى ياخشى كۆرىمەن", "ᓇᒡᓕᒋᕙᒋᑦ",
+    "ᎬᎨᏳᎢ", "Volim te puno"
+  ];
+  var N = PHRASES.length;
+
+  /* ---------- ค่าคงที่ (ย่อจากต้นฉบับ 1080×960 ให้เหลือ 0.6 เท่า) ---------- */
+  var S = 0.6;
+  var W = Math.round(1080 * S), H = Math.round(960 * S);
+  var CX = W / 2, CY = H / 2;
+  var WIDTH = 840 * S;
+  var TEXT_PX = Math.max(10, Math.round(19 * S));
+  var PITCH = Math.round(21 * S);
+  var GAP = 14 * S;
+  var TURN = 10.0, LOOP = 20.0, BUILD = 3.0, TYPING = 0.3, TRAIL = 0.35;
+  var WALL = 22 * S, DOME = 70 * S;
+
+  var FONT_FAMILY = "'Segoe UI','Malgun Gothic','Yu Gothic','Microsoft YaHei','Microsoft JhengHei'," +
+    "'Nirmala UI','Leelawadee UI','Myanmar Text','Ebrima','Microsoft Himalaya','Gadugi','Segoe UI Symbol',sans-serif";
+  var RTL_RE = /[\u0590-\u05FF\u0600-\u06FF\u0700-\u074F\u0750-\u077F\u08A0-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
+
+  /* ครึ่งขวาของเส้นรอบหัวใจ (x, y เป็นสัดส่วนของความกว้าง) */
+  var HALF = [[0, -0.3575], [0.0301, -0.3662], [0.0563, -0.3844], [0.0825, -0.4024], [0.109, -0.4199],
+    [0.1373, -0.4328], [0.1671, -0.4422], [0.1981, -0.4489], [0.231, -0.4507], [0.264, -0.4489],
+    [0.2947, -0.4418], [0.3236, -0.43], [0.349, -0.41], [0.3738, -0.3887], [0.3993, -0.3687],
+    [0.4241, -0.3474], [0.4442, -0.322], [0.4604, -0.295], [0.4741, -0.267], [0.4852, -0.2379],
+    [0.4928, -0.2073], [0.4964, -0.1751], [0.4982, -0.1421], [0.4969, -0.109], [0.4928, -0.077],
+    [0.4857, -0.0462], [0.4767, -0.0162], [0.465, 0.0126], [0.4513, 0.0406], [0.4351, 0.0676],
+    [0.4176, 0.0941], [0.3988, 0.12], [0.3788, 0.1454], [0.3562, 0.1698], [0.3319, 0.1923],
+    [0.3075, 0.2149], [0.2826, 0.2362], [0.2577, 0.2575], [0.2329, 0.2788], [0.208, 0.3001],
+    [0.1831, 0.3214], [0.1577, 0.3414], [0.1323, 0.3614], [0.1069, 0.3815], [0.0809, 0.4002],
+    [0.0548, 0.4185], [0.028, 0.4352], [0, 0.4489]];
+
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function smooth(x) { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); }
+
+  /* ---------- 1. มาสก์หัวใจจากเส้นรอบ ---------- */
+  var cv = document.getElementById('stage');
+  cv.width = W; cv.height = H;
+  var dctx = cv.getContext('2d');
+
+  var low = document.createElement('canvas');
+  low.width = W; low.height = H;
+  var lctx = low.getContext('2d');
+
+  var maskCv = document.createElement('canvas');
+  maskCv.width = W; maskCv.height = H;
+  var mctx = maskCv.getContext('2d', { willReadFrequently: true });
+  var right = HALF.map(function (p) { return [CX + p[0] * WIDTH, CY + p[1] * WIDTH]; });
+  var left = right.slice().reverse().map(function (p) { return [CX * 2 - p[0], p[1]]; });
+  var pts = right.concat(left);
+  mctx.fillStyle = '#fff';
+  mctx.beginPath();
+  mctx.moveTo(pts[0][0], pts[0][1]);
+  for (var i = 1; i < pts.length; i++) mctx.lineTo(pts[i][0], pts[i][1]);
+  mctx.closePath();
+  mctx.fill();
+
+  var maskPx = mctx.getImageData(0, 0, W, H).data;
+  var MASK = new Uint8Array(W * H);
+  for (var i = 0; i < W * H; i++) MASK[i] = maskPx[i * 4 + 3] > 127 ? 1 : 0;
+
+  /* ---------- 2. distance transform → ความหนา (Z) ของหัวใจ ---------- */
+  var INF = 1e9;
+  var DIST = new Float32Array(W * H);
+  for (var i = 0; i < W * H; i++) DIST[i] = MASK[i] ? INF : 0;
+  var x, y, d, k;
+  for (y = 0; y < H; y++) {
+    for (x = 0; x < W; x++) {
+      k = y * W + x;
+      if (!MASK[k]) continue;
+      d = DIST[k];
+      if (x > 0 && DIST[k - 1] + 1 < d) d = DIST[k - 1] + 1;
+      if (y > 0) {
+        if (DIST[k - W] + 1 < d) d = DIST[k - W] + 1;
+        if (x > 0 && DIST[k - W - 1] + 1.4142 < d) d = DIST[k - W - 1] + 1.4142;
+        if (x < W - 1 && DIST[k - W + 1] + 1.4142 < d) d = DIST[k - W + 1] + 1.4142;
+      }
+      DIST[k] = d;
+    }
+  }
+  for (y = H - 1; y >= 0; y--) {
+    for (x = W - 1; x >= 0; x--) {
+      k = y * W + x;
+      if (!MASK[k]) continue;
+      d = DIST[k];
+      if (x < W - 1 && DIST[k + 1] + 1 < d) d = DIST[k + 1] + 1;
+      if (y < H - 1) {
+        if (DIST[k + W] + 1 < d) d = DIST[k + W] + 1;
+        if (x < W - 1 && DIST[k + W + 1] + 1.4142 < d) d = DIST[k + W + 1] + 1.4142;
+        if (x > 0 && DIST[k + W - 1] + 1.4142 < d) d = DIST[k + W - 1] + 1.4142;
+      }
+      DIST[k] = d;
+    }
+  }
+  var distMax = 1;
+  for (i = 0; i < W * H; i++) if (DIST[i] > distMax) distMax = DIST[i];
+
+  var RAD = new Float32Array(W * H);
+  var Z = new Float32Array(W * H);
+  var lip1 = 14 * S, lip2 = 34 * S, sig1 = 5 * S, sig2 = 7 * S;
+  for (i = 0; i < W * H; i++) {
+    if (!MASK[i]) { RAD[i] = 1; continue; }
+    var rad = 1 - DIST[i] / distMax;
+    RAD[i] = rad;
+    var lip = Math.exp(-Math.pow((DIST[i] - lip1) / sig1, 2)) * 10 * S -
+              Math.exp(-Math.pow((DIST[i] - lip2) / sig2, 2)) * 7 * S;
+    Z[i] = WALL + DOME * Math.sqrt(Math.max(0, 1 - rad * rad)) + lip;
+  }
+
+  /* blur Z เบา ๆ สองรอบ (box) แล้วคูณกลับด้วยมาสก์ */
+  var tmp = new Float32Array(W * H);
+  function boxPass(src, dst, r) {
+    for (var yy = 0; yy < H; yy++) {
+      for (var xx = 0; xx < W; xx++) {
+        var a = 0, n = 0;
+        for (var t2 = -r; t2 <= r; t2++) {
+          var x2 = xx + t2;
+          if (x2 < 0 || x2 >= W) continue;
+          a += src[yy * W + x2]; n++;
+        }
+        dst[yy * W + xx] = a / n;
+      }
+    }
+    for (var xx2 = 0; xx2 < W; xx2++) {
+      for (var yy2 = 0; yy2 < H; yy2++) {
+        var b = 0, m = 0;
+        for (var t3 = -r; t3 <= r; t3++) {
+          var y3 = yy2 + t3;
+          if (y3 < 0 || y3 >= H) continue;
+          b += dst[y3 * W + xx2]; m++;
+        }
+        tmp[yy2 * W + xx2] = b / m;
+      }
+    }
+    dst.set(tmp);
+  }
+  boxPass(Z, Z, 1);
+  for (i = 0; i < W * H; i++) Z[i] *= MASK[i];
+
+  var ZX = new Float32Array(W * H), ZY = new Float32Array(W * H);
+  for (y = 0; y < H; y++) {
+    for (x = 0; x < W; x++) {
+      k = y * W + x;
+      if (!MASK[k]) continue;
+      var xl = x > 0 ? k - 1 : k, xr = x < W - 1 ? k + 1 : k;
+      var yu = y > 0 ? k - W : k, yd = y < H - 1 ? k + W : k;
+      ZX[k] = (Z[xr] - Z[xl]) / (xr === xl ? 1 : 2);
+      ZY[k] = (Z[yd] - Z[yu]) / (yd === yu ? 1 : 2);
+    }
+  }
+
+  /* ---------- 3. แถวของพิกเซลที่อยู่ในหัวใจ ---------- */
+  var RUNS = [];
+  for (y = 0; y < H; y++) {
+    var start = -1;
+    for (x = 0; x < W; x++) {
+      if (MASK[y * W + x]) { if (start < 0) start = x; }
+      else if (start >= 0) { RUNS.push({ y: y, x0: start, x1: x - 1 }); start = -1; }
+    }
+    if (start >= 0) RUNS.push({ y: y, x0: start, x1: W - 1 });
+  }
+
+  /* ---------- 4. ตัวอักษร: วาดแต่ละประโยคครั้งเดียว เก็บเป็น alpha ---------- */
+  var SPR = [];
+  var measureCv = document.createElement('canvas');
+  var measureCtx = measureCv.getContext('2d');
+  var fontStr = '400 ' + TEXT_PX + 'px ' + FONT_FAMILY;
+
+  function makeSprite(text) {
+    var c = document.createElement('canvas');
+    var c2 = c.getContext('2d', { willReadFrequently: true });
+    c2.font = fontStr;
+    measureCtx.font = fontStr;
+    var w0 = Math.ceil(measureCtx.measureText(text).width) + 4;
+    var h0 = Math.ceil(TEXT_PX * 1.7);
+    c.width = w0; c.height = h0;
+    c2 = c.getContext('2d', { willReadFrequently: true });
+    c2.font = fontStr;
+    c2.textBaseline = 'middle';
+    c2.textAlign = 'left';
+    c2.fillStyle = '#fff';
+    c2.fillText(text, 2, h0 / 2);
+    var px = c2.getImageData(0, 0, w0, h0).data;
+    var minX = w0, maxX = -1, minY = h0, maxY = -1;
+    for (var yy = 0; yy < h0; yy++) {
+      for (var xx = 0; xx < w0; xx++) {
+        if (px[(yy * w0 + xx) * 4 + 3] > 12) {
+          if (xx < minX) minX = xx;
+          if (xx > maxX) maxX = xx;
+          if (yy < minY) minY = yy;
+          if (yy > maxY) maxY = yy;
+        }
+      }
+    }
+    if (maxX < 0 || maxY < 0) return { w: 1, h: 1, a: new Float32Array(1), rtl: false };
+    var sw = maxX - minX + 1, sh = maxY - minY + 1;
+    var a = new Float32Array(sw * sh);
+    for (var yy2 = 0; yy2 < sh; yy2++) {
+      for (var xx2 = 0; xx2 < sw; xx2++) {
+        a[yy2 * sw + xx2] = px[((yy2 + minY) * w0 + (xx2 + minX)) * 4 + 3] / 255;
+      }
+    }
+    return { w: sw, h: sh, a: a, rtl: RTL_RE.test(text) };
+  }
+
+  for (i = 0; i < N; i++) SPR.push(makeSprite(PHRASES[i]));
+
+  /* ---------- 5. จัดวางข้อความให้เต็มแต่ละแถว (justified) ---------- */
+  var LAYOUT = [[], []];
+
+  function fitRow(xl, xr, first, side) {
+    var span = xr - xl;
+    var picks = [], used = 0, j = first, out = [];
+    for (var step = 0; step < 40; step++) {
+      var idx = -1, w = 0;
+      for (var tries = 0; tries < 12; tries++) {
+        var cand = ((j + tries * 5) % N + N) % N;
+        var cw = SPR[cand].w;
+        if (used + cw + (picks.length ? GAP : 0) <= span) { idx = cand; w = cw; break; }
+      }
+      if (idx < 0) break;
+      used += w + (picks.length ? GAP : 0);
+      picks.push([idx, w]);
+      j = idx + 7;
+    }
+    if (!picks.length) return out;
+    var total = 0;
+    for (var p = 0; p < picks.length; p++) total += picks[p][1];
+    var gap = (span - total) / Math.max(picks.length - 1, 1);
+    var px = picks.length > 1 ? xl : xl + (span - picks[0][1]) / 2;
+    for (var q = 0; q < picks.length; q++) {
+      out.push({ idx: picks[q][0], x: px, w: picks[q][1], gap: gap });
+      px += picks[q][1] + gap;
+    }
+    return out;
+  }
+
+  var band = new Float32Array(W);
+  var rowStart = Math.round(CY - 0.47 * WIDTH), rowEnd = Math.round(CY + 0.46 * WIDTH);
+  var r = 0;
+  for (var ry = rowStart; ry < rowEnd; ry += PITCH, r++) {
+    band.fill(0);
+    var by0 = Math.max(0, ry - Math.floor(TEXT_PX / 2));
+    var by1 = Math.min(H - 1, ry + Math.floor(TEXT_PX / 2));
+    for (var yy3 = by0; yy3 <= by1; yy3++) {
+      for (var xx3 = 0; xx3 < W; xx3++) {
+        var v = RAD[yy3 * W + xx3];
+        if (v > band[xx3]) band[xx3] = v;
+      }
+    }
+    /* หา run ของคอลัมน์ที่ยังพอมีที่ให้ตัวอักษร */
+    var runS = -1;
+    for (var cx2 = 0; cx2 <= W; cx2++) {
+      var ok = cx2 < W && band[cx2] < 0.985;
+      if (ok) { if (runS < 0) runS = cx2; }
+      else if (runS >= 0) {
+        if (cx2 - runS >= 20 * S * 1.6) {
+          for (var side = 0; side < 2; side++) {
+            var placed = fitRow(runS, cx2 - 1, r * 13 + side * 29 + runS, side);
+            for (var pi = 0; pi < placed.length; pi++) {
+              var pp = placed[pi];
+              LAYOUT[side].push({
+                r: r, j: pi, idx: pp.idx, x: pp.x, w: pp.w, y: ry, side: side,
+                start: 0.1 + (((r * 7919 + pi * 104729 + side * 31) % 997) / 997) * (BUILD - 0.6),
+                p: 0, done: false, counted: false
+              });
+            }
+          }
+        }
+        runS = -1;
+      }
+    }
+  }
+
+  /* ---------- 6. ชั้นตัวอักษร (front / back) ---------- */
+  var FRONT = new Float32Array(W * H);
+  var BACK = new Float32Array(W * H);
+
+  function stampLayer(layer, item, prog) {
+    var sp = SPR[item.idx];
+    var x0 = Math.round(item.x);
+    var y0 = Math.round(item.y - sp.h / 2);
+    var cut = Math.round(sp.w * prog);
+    if (cut <= 0) return;
+    var c0 = sp.rtl ? sp.w - cut : 0;
+    var c1 = sp.rtl ? sp.w : cut;
+    for (var yy = 0; yy < sp.h; yy++) {
+      var ty = y0 + yy;
+      if (ty < 0 || ty >= H) continue;
+      var rowA = yy * sp.w, rowL = ty * W;
+      for (var xx = c0; xx < c1; xx++) {
+        var a = sp.a[rowA + xx];
+        if (a <= 0) continue;
+        var tx = x0 + xx;
+        if (tx < 0 || tx >= W) continue;
+        var li = rowL + tx;
+        if (layer[li] < a) layer[li] = a;
+      }
+    }
+  }
+
+  /* ---------- 7. chrome environment (ตาราง lookup) ---------- */
+  var LUTN = 64;
+  var LUT = new Float32Array(LUTN * LUTN * 3);
+  var SKY = [1.0, 240 / 255, 248 / 255], BAND = [78 / 255, 36 / 255, 70 / 255], FLOOR = [246 / 255, 168 / 255, 210 / 255];
+  for (var iy = 0; iy < LUTN; iy++) {
+    var lry = iy / (LUTN - 1) * 2 - 1;
+    var sky = smooth((lry - 0.12) / 0.3);
+    var floor = smooth((-lry - 0.05) / 0.4);
+    var bandW = 1 - sky - floor;
+    var streakY = smooth((lry + 0.1) / 0.3);
+    for (var ix = 0; ix < LUTN; ix++) {
+      var lrx = ix / (LUTN - 1) * 2 - 1;
+      var streak = Math.exp(-Math.pow((lrx + 0.35) / 0.08, 2)) * streakY;
+      var o = ((iy * LUTN + ix) * 3);
+      for (var ch = 0; ch < 3; ch++) {
+        LUT[o + ch] = BAND[ch] * bandW + (ch === 0 ? SKY[0] : SKY[ch]) * sky +
+          FLOOR[ch] * floor + streak * 0.5;
+      }
+    }
+  }
+  /* ---------- 8. เรนเดอร์ ---------- */
+  var OUT = new Float32Array(W * H * 3);
+  var TRAILBUF = new Float32Array(W * H * 3);
+  var ZB = new Float32Array(W * H);
+  var imgData = lctx.createImageData(W, H);
+  var curY;
+
+  function putPoint(X, D, tex, nx, ny, nz, isWall) {
+    var sx = X * cs + D * sn + CX;
+    if (sx < 0 || sx >= W) return;
+    var nzr = -nx * sn + nz * cs;
+    if (nzr <= -0.05) return;
+    var xi = sx | 0;
+    var depth = -X * sn + D * cs;
+    var bi = curY * W + xi;
+    if (depth <= ZB[bi]) return;
+    ZB[bi] = depth;
+    var nxr = nx * cs + nz * sn;
+    var rim = 1 - Math.abs(nzr);
+    var lryv = isWall ? 0.25 : 2 * nzr * ny;
+    var lrxv = 2 * nzr * nxr;
+    var liy = ((clamp(lryv, -1, 1) + 1) * 0.5 * (LUTN - 1)) | 0;
+    var lix = ((clamp(lrxv, -1, 1) + 1) * 0.5 * (LUTN - 1)) | 0;
+    var lo = (liy * LUTN + lix) * 3;
+    var val = tex * (0.95 + 0.8 * rim);
+    var o3 = bi * 3;
+    OUT[o3] = LUT[lo] * val;
+    OUT[o3 + 1] = LUT[lo + 1] * val;
+    OUT[o3 + 2] = LUT[lo + 2] * val;
+  }
+
+  var cs = 1, sn = 0;
+
+  function render(t) {
+    OUT.fill(0);
+    ZB.fill(-1e9);
+    var th = 2 * Math.PI * t / TURN;
+    cs = Math.cos(th); sn = Math.sin(th);
+    for (var ri = 0; ri < RUNS.length; ri++) {
+      var run = RUNS[ri];
+      curY = run.y;
+      var base = curY * W;
+
+      for (var xx = run.x0; xx <= run.x1; xx++) {
+        var idx = base + xx;
+        var z = Z[idx];
+        if (z <= 0) continue;
+        var zx = ZX[idx], zy = ZY[idx];
+        var inv = 1 / Math.sqrt(zx * zx + zy * zy + 1);
+        var X = xx - CX;
+        putPoint(X, z, FRONT[idx], -zx * inv, zy * inv, inv, false);
+        putPoint(X, -z, BACK[base + (W - 1 - xx)], zx * inv, zy * inv, -inv, false);
+      }
+
+      /* ผนังด้านข้างซ้าย-ขวา (โครมเมียมล้วน) */
+      var ends = [run.x0, run.x1];
+      for (var e = 0; e < 2; e++) {
+        var xe = ends[e];
+        var ze = Math.max(Z[base + xe], WALL * 0.8);
+        var stepZ = 0.9;
+        for (var zs = -ze; zs <= ze; zs += stepZ) {
+          putPoint(xe - CX, zs, 0.85, e === 0 ? -1 : 1, 0.12, 0, true);
+        }
+      }
+    }
+
+  }
+
+  /* แปลง buffer เป็น ImageData แยกฟังก์ชันเพื่อความชัดเจน */
+  function flush() {
+    var d = imgData.data;
+    var n = W * H;
+    for (var p = 0; p < n; p++) {
+      var s3 = p * 3, d4 = p * 4;
+      var r0 = TRAILBUF[s3] * 255, g0 = TRAILBUF[s3 + 1] * 255, b0 = TRAILBUF[s3 + 2] * 255;
+      d[d4] = r0 > 255 ? 255 : r0 | 0;
+      d[d4 + 1] = g0 > 255 ? 255 : g0 | 0;
+      d[d4 + 2] = b0 > 255 ? 255 : b0 | 0;
+      d[d4 + 3] = 255;
+    }
+    lctx.putImageData(imgData, 0, 0);
+  }
+
+  function setTrail() {
+    var n3 = W * H * 3;
+    for (var q = 0; q < n3; q++) {
+      var keep = TRAILBUF[q] * TRAIL;
+      TRAILBUF[q] = OUT[q] > keep ? OUT[q] : keep;
+    }
+  }
+
+  function draw() {
+    dctx.clearRect(0, 0, W, H);
+    dctx.globalCompositeOperation = 'lighter';
+    dctx.filter = 'blur(8px)';
+    dctx.globalAlpha = 0.55;
+    dctx.drawImage(low, 0, 0);
+    dctx.filter = 'blur(2.5px)';
+    dctx.globalAlpha = 0.85;
+    dctx.drawImage(low, 0, 0);
+    dctx.filter = 'none';
+    dctx.globalAlpha = 1;
+    dctx.drawImage(low, 0, 0);
+    dctx.globalCompositeOperation = 'source-over';
+  }
+
+  /* ---------- 9. ตัวควบคุมเวลา ---------- */
+  var t = 0, paused = false, running = true;
+  var clockEl = document.getElementById('clock');
+  var statEl = document.getElementById('stat');
+
+  var allItems = LAYOUT[0].concat(LAYOUT[1]);
+
+  function updateTextures(tt) {
+    var shown = 0;
+    for (var q = 0; q < allItems.length; q++) {
+      var it = allItems[q];
+      var p = clamp((tt - it.start) / TYPING, 0, 1);
+      if (p <= 0) continue;
+      it.p = smooth(p);
+      shown++;
+      if (it.done) continue;
+      var layer = it.side === 0 ? FRONT : BACK;
+      stampLayer(layer, it, it.p);
+      if (it.p >= 1) it.done = true;
+    }
+    return shown;
+  }
+
+  var last = performance.now();
+  var frames = 0, fpsT = last, isFps = 0;
+
+  function frame(now) {
+    var dt = (now - last) / 1000;
+    last = now;
+    if (!paused) {
+      t += Math.min(dt, 1 / 15);
+      if (t > LOOP) t -= LOOP;
+    }
+    var shown = updateTextures(t);
+    render(t);
+    setTrail();
+    flush();
+    draw();
+
+    clockEl.textContent = 't ' + t.toFixed(2).padStart(5, '0') + 's';
+    statEl.textContent = 'languages ' + N + ' · phrases ' + shown;
+
+    frames++;
+    if (now - fpsT > 500) { isFps = frames * 1000 / (now - fpsT); frames = 0; fpsT = now; }
+    requestAnimationFrame(frame);
+  }
+
+  window.__iheart = function () {
+    return { fps: Math.round(isFps), t: +t.toFixed(2), items: allItems.length, typed: allItems.filter(function (a) { return a.done; }).length };
+  };
+
+  function reset() { t = 0; for (var q = 0; q < allItems.length; q++) { allItems[q].done = false; allItems[q].p = 0; } FRONT.fill(0); BACK.fill(0); TRAILBUF.fill(0); }
+
+  document.body.addEventListener('click', function () { paused = !paused; });
+  window.addEventListener('keydown', function (ev) {
+    if (ev.code === 'Space') { ev.preventDefault(); paused = !paused; }
+    if (ev.key === 'r' || ev.key === 'R') reset();
+  });
+
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

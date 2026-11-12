@@ -9,6 +9,7 @@
 - https://nawat2809-lang.github.io/date-invite/index-mymelody.html — เวอร์ชันมายเมโรดี้ (ชมพูพาสเทล)
 - https://nawat2809-lang.github.io/date-invite/index-v1.html — เวอร์ชันแรก
 - https://nawat2809-lang.github.io/date-invite/neon-love-heart.html — หัวใจ neon ที่ประกอบจากคำบอกรักหลายภาษา (canvas)
+- https://nawat2809-lang.github.io/date-invite/i-love-you.html — หัวใจ 3D จากคำบอกรัก 114 ภาษา (พอร์ตจากผลงานของ JIN2)
 
 ## ไฟล์ที่มี
 | ไฟล์ | คำอธิบาย |
@@ -19,6 +20,7 @@
 | `index-mymelody.html` | เวอร์ชันมายเมโรดี้ (โทนชมพูพาสเทล) |
 | `index-v1.html` | เวอร์ชันแรก |
 | `neon-love-heart.html` | หัวใจ neon จากคำบอกรักหลายภาษา วาดด้วย canvas แตะเพื่อเล่นใหม่ |
+| `i-love-you.html` | หัวใจหมุนได้จากคำบอกรัก 114 ภาษา พอร์ต canvas จากผลงาน Python ของ JIN2 (@jin_22ee) |
 | `.nojekyll` | บอก GitHub Pages ว่าไม่ต้องประมวลผลด้วย Jekyll |
 
 > อยากสลับหน้าแรก: copy ไฟล์ที่ต้องการทับ `index.html` แล้ว commit + push
