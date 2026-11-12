@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Neon Love Heart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: dark;
+  box-sizing: border-box;
+  --bg: #07020a;
+  --glow: #3a0620;
+  --text: #ffd6e6;
+  --muted: #b97a95;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+html, body { height: 100%; margin: 0; }
+body {
+  background: radial-gradient(ellipse at 50% 45%, var(--glow) 0%, var(--bg) 65%);
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Sarabun', 'Noto Sans Thai', 'Noto Sans', system-ui, sans-serif;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+.caption {
+  position: fixed; left: 0; right: 0;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
+  text-align: center; padding: 0 16px;
+  opacity: 0; transition: opacity 1.6s ease;
+}
+.caption.on { opacity: 1; }
+.caption strong {
+  display: block; font-size: clamp(22px, 5vw, 34px); font-weight: 700;
+  text-shadow: 0 0 12px #ff0055, 0 0 28px #ff0055;
+}
+.caption span { display: block; margin-top: 6px; font-size: 14px; color: var(--muted); }
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="หัวใจที่ประกอบด้วยคำบอกรักหลายภาษา" role="img"></canvas>
+<div class="caption" id="cap"><strong>ฉันคิดถึงคุณ</strong><span>แตะเพื่อดูอีกครั้ง</span></div>
+<script>
+(function () {
+  var PHRASES = ["I miss you", "Seni seviyorum", "Te amo", "Ti amo", "Je t’aime",
+    "Я тебя люблю", "Ich liebe dich", "Aku cinta kamu", "Kocham cię",
+    "Jag älskar dig", "ฉันคิดถึงคุณ", "사랑해", "我爱你", "Anh yêu em"];
+  var COLORS = ["#ff0055", "#ff3300", "#ff66aa", "#ff0000", "#ffffff"];
+  var FONT = "'Sarabun','Noto Sans Thai','Noto Sans','Noto Sans CJK SC','Malgun Gothic',system-ui,sans-serif";
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var cv = document.getElementById("c"), ctx = cv.getContext("2d");
+  var off = document.createElement("canvas"), octx = off.getContext("2d");
+  var cap = document.getElementById("cap");
+  var W, H, dpr, cx, cy, items, shown, start;
+  var DURATION = 5500;
+
+  function heart(t) {
+    return [16 * Math.pow(Math.sin(t), 3),
+      13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)];
+  }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+  function build() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    [cv, off].forEach(function (c) { c.width = W * dpr; c.height = H * dpr; });
+    var size = Math.min(W * 0.94, H * 0.74);
+    var S = size / 36;
+    cx = W / 2; cy = H * 0.46;
+    items = [];
+    [[1, 220, 2], [0.75, 150, 3], [0.5, 90, 3]].forEach(function (r) {
+      for (var i = 0; i < r[1]; i++) {
+        var t = (i / r[1]) * 2 * Math.PI, p = heart(t);
+        items.push({
+          t: t,
+          x: cx + p[0] * S * r[0] + rnd(-r[2], r[2]) * size / 400,
+          y: cy - (p[1] + 2.5) * S * r[0] + rnd(-r[2], r[2]) * size / 400,
+          text: pick(PHRASES), color: pick(COLORS),
+          fs: size * rnd(0.024, 0.036)
+        });
+      }
+    });
+    items.sort(function (a, b) { return a.t - b.t; });
+    octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    octx.clearRect(0, 0, W, H);
+    shown = 0;
+    cap.classList.remove("on");
+    start = performance.now();
+  }
+
+  function stamp(it) {
+    octx.font = "700 " + it.fs.toFixed(1) + "px " + FONT;
+    octx.textAlign = "center";
+    octx.textBaseline = "middle";
+    octx.shadowColor = it.color;
+    octx.shadowBlur = it.fs * 0.9;
+    octx.fillStyle = it.color;
+    octx.fillText(it.text, it.x, it.y);
+  }
+
+  function frame(now) {
+    var el = now - start;
+    var target = reduce ? items.length : Math.min(items.length, Math.floor(el / DURATION * items.length));
+    while (shown < target) stamp(items[shown++]);
+    if (shown >= items.length) cap.classList.add("on");
+
+    var k = reduce ? 1 : 1 + 0.03 * Math.pow(Math.max(0, Math.sin(now / 1000 * 5.2)), 4);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.translate(cx, cy);
+    ctx.scale(k, k);
+    ctx.translate(-cx, -cy);
+    ctx.drawImage(off, 0, 0, W, H);
+    requestAnimationFrame(frame);
+  }
+
+  var rt;
+  window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(build, 200); });
+  document.body.addEventListener("click", build);
+
+  build();
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(build);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
