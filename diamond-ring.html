@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WILL YOU · แหวนเพชรจากตัวอักษร</title>
+<style>
+  :root{ color-scheme:dark; --pink:#ff7ab6; --dim:#8f8798; }
+  *{ box-sizing:border-box }
+  html,body{ height:100%; margin:0 }
+  body{
+    background:#000;
+    color:#d8d4e0;
+    font-family:ui-monospace,"SF Mono",Consolas,"Cascadia Mono",Menlo,monospace;
+    overflow:hidden; cursor:pointer; -webkit-tap-highlight-color:transparent;
+    display:flex; align-items:center; justify-content:center;
+    padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);
+  }
+  #stage{
+    width:min(96vw, calc(86vh * 1.125));
+    max-width:1080px;
+    aspect-ratio:1080 / 960;
+    height:auto; display:block;
+  }
+  .hud{
+    position:fixed; left:clamp(14px,3vw,64px); bottom:clamp(12px,3vh,42px);
+    font-size:clamp(10px,1.6vw,13px); line-height:1.55; color:var(--dim);
+    pointer-events:none; letter-spacing:.02em; text-shadow:0 1px 8px rgba(0,0,0,.9);
+  }
+  .hud .clock{ color:var(--pink); margin-bottom:6px }
+  .hud a{ color:#b9a8c6; text-decoration:none; border-bottom:1px dotted rgba(185,168,198,.5); pointer-events:auto }
+  .hint{
+    position:fixed; right:clamp(14px,3vw,64px); bottom:clamp(12px,3vh,42px);
+    font-size:clamp(9px,1.4vw,12px); color:rgba(143,135,152,.7);
+    pointer-events:none; text-align:right;
+  }
+  @media (max-width:560px){ .hint{ display:none } }
+</style>
+</head>
+<body>
+<canvas id="stage" aria-label="แหวนเพชรที่วาดขึ้นจากตัวอักษร หมุนช้า ๆ พร้อมประกายไฟ" role="img"></canvas>
+
+<div class="hud">
+  <div class="clock" id="clock">t 00.00s</div>
+  <div id="stat">rotation 000.00° · glints 0</div>
+  <div>after JIN2 · <a href="https://github.com/JIN2-ASCII/-JIN2-ASCII/tree/main/DIAMOND-RING" target="_blank" rel="noopener">@jin_22ee</a> · canvas port</div>
+</div>
+<div class="hint">แตะ / Space = หยุดชั่วคราว · R = เริ่มใหม่</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ================= ค่าคงที่ ================= */
+  var TAU = Math.PI * 2;
+  var LOOP = 20.0, BUILD = 3.2, TURN = 12.0, FLOOR = -0.78;
+  var DRAW0 = 0.3, DRAW1 = 5.6;
+
+  var POOLS = ['1il!;:', 'rtfjcvxz=+', 'aeoun0{}[]<>', '08B$#&%Q'];
+  var CHARS = ' .,:~+*^01|/\\-_#()x' + POOLS.join('');
+  var AT = {};
+  for (var ci = 0; ci < CHARS.length; ci++) AT[CHARS[ci]] = ci;
+
+  var FILL = POOLS.map(function (p) {
+    var row = [];
+    for (var k = 0; k < 12; k++) row.push(AT[p.charAt(k % p.length)]);
+    return row;
+  });
+
+  var BAND = 0, PRONG = 1, GEM = 2, GLINT = 3, FIRE_R = 4, FIRE_B = 5, FIRE_G = 6, DUST = 7, REFL = 8, STAR = 9;
+
+  var R_BAND = 0.55, TUBE = 0.065;
+  var GIRDLE_Y = 0.88, GIRDLE_R = 0.25, TABLE_Y = 1.0, TABLE_R = 0.135, CULET_Y = 0.66;
+
+  var CW = 8, CH = 12;
+  var PW = 1080, PH = 960;
+  var COLS = PW / CW, ROWS = PH / CH;
+  var ASPECT = (COLS * CW) / (ROWS * CH);
+
+  var COLORS = [
+    [214, 220, 232], [232, 236, 244], [226, 238, 255], [255, 255, 255], [255, 170, 200],
+    [160, 210, 255], [255, 230, 160], [255, 214, 140], [150, 150, 165], [120, 120, 140]
+  ];
+
+  function clip01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function smooth(x) { x = clip01(x); return x * x * (3 - 2 * x); }
+
+  function rng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* ================= 1. เรขาคณิตของแหวน ================= */
+  var bandP = [], bandN = [];
+  var NA = 340, NB = 30;
+  for (var ia = 0; ia < NA; ia++) {
+    var ang = TAU * ia / NA, ca = Math.cos(ang), sa = Math.sin(ang);
+    var rr = TUBE * (1 - 0.35 * Math.pow(Math.max(sa, 0), 6));
+    for (var ib = 0; ib < NB; ib++) {
+      var bet = TAU * ib / NB, cb = Math.cos(bet), sb = Math.sin(bet);
+      var nx = ca * cb, ny = sa * cb, nz = sb;
+      bandP.push(ca * R_BAND + nx * rr, sa * R_BAND + ny * rr, nz * rr * 1.5);
+      bandN.push(nx, ny, nz);
+    }
+  }
+
+  var gemP = [], gemN = [], gemF = [], facetNo = 0;
+  function facet(a, b, c, n) {
+    var nl = Math.hypot(n[0], n[1], n[2]) || 1;
+    var ux = n[0] / nl, uy = n[1] / nl, uz = n[2] / nl;
+    var G = 12;
+    for (var iu = 0; iu < G; iu++) {
+      var u = iu / (G - 1);
+      for (var iv = 0; iv < G; iv++) {
+        var v = iv / (G - 1);
+        if (u + v > 1) continue;
+        gemP.push(a[0] + (b[0] - a[0]) * u + (c[0] - a[0]) * v,
+                  a[1] + (b[1] - a[1]) * u + (c[1] - a[1]) * v,
+                  a[2] + (b[2] - a[2]) * u + (c[2] - a[2]) * v);
+        gemN.push(ux, uy, uz);
+        gemF.push(facetNo);
+      }
+    }
+    facetNo++;
+  }
+
+  function sub(a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }
+  function cross(a, b) { return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; }
+
+  var m = 16;
+  for (var sec = 0; sec < m; sec++) {
+    var a0 = TAU * sec / m, a1 = TAU * (sec + 1) / m;
+    var g0 = [GIRDLE_R * Math.cos(a0), GIRDLE_Y, GIRDLE_R * Math.sin(a0)];
+    var g1 = [GIRDLE_R * Math.cos(a1), GIRDLE_Y, GIRDLE_R * Math.sin(a1)];
+    var t0 = [TABLE_R * Math.cos(a0), TABLE_Y, TABLE_R * Math.sin(a0)];
+    var t1 = [TABLE_R * Math.cos(a1), TABLE_Y, TABLE_R * Math.sin(a1)];
+    var culet = [0, CULET_Y, 0];
+
+    var crown = cross(sub(g1, g0), sub(t0, g0));
+    var sgn = crown[1] < 0 ? -1 : 1;
+    crown = [crown[0] * sgn, crown[1] * sgn, crown[2] * sgn];
+    facet(g0, g1, t0, crown);
+    facet(g1, t1, t0, [crown[0], crown[1] * 1.15, crown[2]]);
+
+    var pav = cross(sub(culet, g0), sub(g1, g0));
+    var sgn2 = pav[1] < 0 ? -1 : 1;
+    pav = [-pav[0] * sgn2, -pav[1] * sgn2, -pav[2] * sgn2];
+    facet(g0, g1, culet, pav);
+    facet([0, TABLE_Y, 0], t0, t1, [0, 1, 0]);
+  }
+
+  var prongP = [], prongN = [];
+  for (var pi = 0; pi < 4; pi++) {
+    var pa = TAU * (pi + 0.5) / 4;
+    var base = [0.08 * Math.cos(pa), R_BAND + 0.02, 0.08 * Math.sin(pa)];
+    var tip = [(GIRDLE_R + 0.015) * Math.cos(pa), TABLE_Y - 0.03, (GIRDLE_R + 0.015) * Math.sin(pa)];
+    var dv = sub(tip, base);
+    var dl = Math.hypot(dv[0], dv[1], dv[2]);
+    var dd = [dv[0] / dl, dv[1] / dl, dv[2] / dl];
+    var sv = cross(dd, [0, 0, 1]);
+    var sl = Math.hypot(sv[0], sv[1], sv[2]) || 1;
+    sv = [sv[0] / sl, sv[1] / sl, sv[2] / sl];
+    var wv = cross(sv, dd);
+    for (var iu2 = 0; iu2 < 40; iu2++) {
+      var uu = iu2 / 39;
+      for (var ip2 = 0; ip2 < 12; ip2++) {
+        var phi = TAU * ip2 / 12;
+        var cn = Math.cos(phi), sn2 = Math.sin(phi);
+        var nx2 = cn * sv[0] + sn2 * wv[0];
+        var ny2 = cn * sv[1] + sn2 * wv[1];
+        var nz2 = cn * sv[2] + sn2 * wv[2];
+        prongP.push(base[0] + uu * dv[0] + nx2 * 0.022,
+                    base[1] + uu * dv[1] + ny2 * 0.022,
+                    base[2] + uu * dv[2] + nz2 * 0.022);
+        prongN.push(nx2, ny2, nz2);
+      }
+    }
+  }
+
+  var NP_BAND = bandP.length / 3;
+  var NP_PRONG = prongP.length / 3;
+  var NP_GEM = gemP.length / 3;
+  var NP = NP_BAND + NP_PRONG + NP_GEM;
+
+  var RP = new Float32Array(NP * 3), RN = new Float32Array(NP * 3);
+  var RKIND = new Uint8Array(NP), RPART = new Int16Array(NP), RGEMF = new Uint8Array(NP), ORDER = new Float32Array(NP);
+
+  for (var q = 0; q < NP; q++) {
+    var src, s3;
+    if (q < NP_BAND) { src = bandP; s3 = q * 3; RKIND[q] = BAND; RPART[q] = 0; RGEMF[q] = 0; }
+    else if (q < NP_BAND + NP_PRONG) { src = prongP; s3 = (q - NP_BAND) * 3; RKIND[q] = PRONG; RPART[q] = 1; RGEMF[q] = 0; }
+    else { src = gemP; s3 = (q - NP_BAND - NP_PRONG) * 3; RKIND[q] = GEM; RPART[q] = 10 + gemF[q - NP_BAND - NP_PRONG]; RGEMF[q] = gemF[q - NP_BAND - NP_PRONG]; }
+    RP[q * 3] = src[s3]; RP[q * 3 + 1] = src[s3 + 1]; RP[q * 3 + 2] = src[s3 + 2];
+    var nsrc = q < NP_BAND ? bandN : q < NP_BAND + NP_PRONG ? prongN : gemN;
+    var n3 = q < NP_BAND ? q * 3 : q < NP_BAND + NP_PRONG ? (q - NP_BAND) * 3 : (q - NP_BAND - NP_PRONG) * 3;
+    RN[q * 3] = nsrc[n3]; RN[q * 3 + 1] = nsrc[n3 + 1]; RN[q * 3 + 2] = nsrc[n3 + 2];
+
+    var px = RP[q * 3], py = RP[q * 3 + 1];
+    var upBand = Math.abs(Math.atan2(Math.sin(Math.atan2(py, px) + Math.PI / 2), Math.cos(Math.atan2(py, px) + Math.PI / 2))) / Math.PI;
+    var prongOrd = 1.0 + (py - R_BAND) / (TABLE_Y - R_BAND) * 0.25;
+    var gemOrd = 1.25 + (py - CULET_Y) / (TABLE_Y - CULET_Y) * 0.45;
+    ORDER[q] = q < NP_BAND ? upBand : q < NP_BAND + NP_PRONG ? prongOrd : gemOrd;
+  }
+
+  var ORDER_MAX = 0;
+  for (q = 0; q < NP; q++) if (ORDER[q] > ORDER_MAX) ORDER_MAX = ORDER[q];
+
+  /* ================= 2. อนุภาค ================= */
+  var r13 = rng(13);
+  var SPK = new Float32Array(2600 * 5);
+  for (q = 0; q < 2600 * 5; q++) SPK[q] = r13();
+  var SPK_IDX = new Int32Array(2600), SPK_BORN = new Float32Array(2600);
+  for (q = 0; q < 2600; q++) {
+    SPK_IDX[q] = Math.min(NP - 1, Math.floor(SPK[q * 5] * NP));
+    SPK_BORN[q] = DRAW0 + ORDER[SPK_IDX[q]] / ORDER_MAX * (DRAW1 - DRAW0);
+  }
+
+  var r14 = rng(14), BURST = new Float32Array(700 * 3);
+  for (q = 0; q < 700 * 3; q++) BURST[q] = r14();
+
+  var r15 = rng(15), HALO = new Float32Array(900 * 2);
+  for (q = 0; q < 900 * 2; q++) HALO[q] = r15();
+
+  var r5 = rng(5), DUSTS = new Float32Array(520 * 4);
+  for (q = 0; q < 520 * 4; q++) DUSTS[q] = r5();
+
+  var r2 = rng(2), STARS = new Float32Array(90 * 3);
+  for (q = 0; q < 90 * 3; q++) STARS[q] = r2();
+
+  /* ================= 3. กล้อง ================= */
+  var EYE = [0.0, 0.85, 4.7], TARGET = [0, 0.22, 0];
+  var fv = sub(TARGET, EYE), fl = Math.hypot(fv[0], fv[1], fv[2]);
+  var FWD = [fv[0] / fl, fv[1] / fl, fv[2] / fl];
+  var rv = cross(FWD, [0, 1, 0]), rl = Math.hypot(rv[0], rv[1], rv[2]);
+  var RIGHT = [rv[0] / rl, rv[1] / rl, rv[2] / rl];
+  var UP = cross(RIGHT, FWD);
+  var VIEW = [-FWD[0], -FWD[1], -FWD[2]];
+  var F = 2.9;
+
+  /* ================= 4. กริดตัวอักษร + z-buffer ================= */
+  var NCELL = COLS * ROWS;
+  var cellZ = new Float32Array(NCELL);
+  var cellPart = new Int16Array(NCELL);
+  var cellLum = new Float32Array(NCELL);
+  var cellTag = new Uint8Array(NCELL);
+  var cellBody = new Uint8Array(NCELL);
+  var charIdx = new Uint8Array(NCELL);
+  var charLum = new Float32Array(NCELL);
+
+  var lastTag = 0;
+  function emit(x, y, z, shade, tag, part) {
+    var relx = x - EYE[0], rely = y - EYE[1], relz = z - EYE[2];
+    var cz = relx * FWD[0] + rely * FWD[1] + relz * FWD[2];
+    if (cz <= 0.2) return;
+    var cx2 = relx * RIGHT[0] + rely * RIGHT[1] + relz * RIGHT[2];
+    var cy2 = relx * UP[0] + rely * UP[1] + relz * UP[2];
+    var ix = ((0.5 + cx2 / cz * F * 0.5) * COLS) | 0;
+    var iy = ((0.5 - cy2 / cz * F * 0.5 * ASPECT) * ROWS) | 0;
+    if (ix < 0 || ix >= COLS || iy < 0 || iy >= ROWS) return;
+    var cell = iy * COLS + ix;
+    if (cz >= cellZ[cell]) return;
+    cellZ[cell] = cz;
+    cellPart[cell] = part;
+    cellLum[cell] = shade;
+    cellTag[cell] = tag;
+    lastTag = tag;
+  }
+
+  /* ================= 5. ฉาก ================= */
+  var glints = 0, deg = 0, bodyCount = 0;
+
+  function reveal(t) {
+    var head = (t - DRAW0) / (DRAW1 - DRAW0) * ORDER_MAX;
+    var kk = new Float32Array(NP), tp = new Uint8Array(NP);
+    for (var i = 0; i < NP; i++) {
+      kk[i] = smooth((head - ORDER[i]) / 0.06);
+      tp[i] = Math.abs(head - ORDER[i]) < 0.035 ? 1 : 0;
+    }
+    return { k: kk, tip: tp };
+  }
+
+  function scene(t) {
+    cellZ.fill(99);
+    cellPart.fill(-1);
+    cellLum.fill(0);
+    cellTag.fill(0);
+    cellBody.fill(0);
+    glints = 0;
+
+    var yaw = TAU * Math.max(t - DRAW1 - 0.6, 0) / TURN;
+    deg = (yaw * 180 / Math.PI) % 360;
+    var cy3 = Math.cos(yaw), sy3 = Math.sin(yaw);
+
+    var key = [0, 0.8, 0.6];
+    var kl = Math.hypot(key[0], key[1], key[2]);
+    key = [key[0] / kl, key[1] / kl, key[2] / kl];
+    var rim = [Math.cos(t * 0.9), 0.5, Math.sin(t * 0.9)];
+    var rl2 = Math.hypot(rim[0], rim[1], rim[2]);
+    rim = [rim[0] / rl2, rim[1] / rl2, rim[2] / rl2];
+
+    var hk = [key[0] + VIEW[0], key[1] + VIEW[1], key[2] + VIEW[2]];
+    var hkl = Math.hypot(hk[0], hk[1], hk[2]);
+    hk = [hk[0] / hkl, hk[1] / hkl, hk[2] / hkl];
+    var hr = [rim[0] + VIEW[0], rim[1] + VIEW[1], rim[2] + VIEW[2]];
+    var hrl = Math.hypot(hr[0], hr[1], hr[2]);
+    hr = [hr[0] / hrl, hr[1] / hrl, hr[2] / hrl];
+
+    var rv2 = reveal(t);
+    var RR = rv2.k, TT = rv2.tip;
+
+    var flash = Math.exp(-Math.pow((t - DRAW1 - 0.15) / 0.18, 2));
+
+    /* ตัวเรือนแหวน */
+    var bx = new Float32Array(NP), by = new Float32Array(NP), bz = new Float32Array(NP);
+    var bsh = new Float32Array(NP);
+    for (var i2 = 0; i2 < NP; i2++) {
+      var x0 = RP[i2 * 3], y0 = RP[i2 * 3 + 1], z0 = RP[i2 * 3 + 2];
+      var px2 = cy3 * x0 + sy3 * z0, py2 = y0, pz2 = -sy3 * x0 + cy3 * z0;
+      bx[i2] = px2; by[i2] = py2; bz[i2] = pz2;
+
+      var n0x = RN[i2 * 3], n0y = RN[i2 * 3 + 1], n0z = RN[i2 * 3 + 2];
+      var nx3 = cy3 * n0x + sy3 * n0z, ny3 = n0y, nz3 = -sy3 * n0x + cy3 * n0z;
+
+      var diff = Math.max(0, nx3 * key[0] + ny3 * key[1] + nz3 * key[2]);
+      var s1 = Math.pow(Math.max(0, nx3 * hk[0] + ny3 * hk[1] + nz3 * hk[2]), 30);
+      var s2 = Math.pow(Math.max(0, nx3 * hr[0] + ny3 * hr[1] + nz3 * hr[2]), 24);
+      var spec = s1 + 0.9 * s2;
+
+      var metal = RKIND[i2] !== GEM;
+      var shade = metal ? 0.5 + 0.35 * diff + 0.9 * spec : 0.8 + 0.2 * diff + 1.4 * spec;
+      var kind = RKIND[i2];
+      var isGlint = !metal && spec > 0.18;
+      if (isGlint) {
+        glints++;
+        var fire = (RGEMF[i2] + Math.floor(t * 7)) % 4;
+        kind = fire === 0 ? GLINT : fire === 1 ? FIRE_R : fire === 2 ? FIRE_B : FIRE_G;
+      }
+      if (metal && spec > 0.5) kind = GLINT;
+
+      var kk2 = RR[i2];
+      var part, sh, tg;
+      if (kk2 < 0.96) {
+        part = -2;
+        sh = TT[i2] ? 1.2 : 0;
+        tg = TT[i2] ? GLINT : DUST;
+      } else {
+        part = RPART[i2];
+        sh = shade;
+        tg = kind;
+        sh *= 1 + 0.8 * flash;
+      }
+      bsh[i2] = sh;
+      emit(px2, py2, pz2, sh, tg, part);
+
+      /* เงาสะท้อนพื้น */
+      if (kk2 >= 0.96) {
+        var ry2 = 2 * FLOOR - py2 - 0.06;
+        emit(px2, ry2, pz2, 0.22 * clip01(sh), REFL, -1);
+      }
+    }
+
+    /* ฝุ่นทอง */
+    var don = smooth((t - BUILD + 0.5) / 1.5);
+    if (don > 0) {
+      for (var d2 = 0; d2 < 520; d2++) {
+        var dd0 = DUSTS[d2 * 4], dd1 = DUSTS[d2 * 4 + 1], dd2 = DUSTS[d2 * 4 + 2], dd3 = DUSTS[d2 * 4 + 3];
+        var da = dd0 * TAU + t * (0.3 + 0.5 * dd1);
+        var dr = 0.9 + 0.8 * dd2;
+        var dy = ((dd3 * 2.4 + t * 0.08) % 2.4) - 0.8;
+        var tw = 0.25 + 0.75 * Math.pow(clip01(Math.sin(t * (2 + 3 * dd1) + dd0 * 40)), 4);
+        emit(Math.cos(da) * dr, dy, Math.sin(da) * dr * 0.7, tw * don, DUST, -1);
+      }
+    }
+
+    /* ดาว */
+    for (var st2 = 0; st2 < 90; st2++) {
+      emit(STARS[st2 * 3] * 10 - 5, STARS[st2 * 3 + 1] * 6 - 1.5, -6.0,
+        0.1 + 0.1 * Math.sin(t * 2 + STARS[st2 * 3 + 2] * TAU), STAR, -1);
+    }
+
+    /* ประกายที่ปลายปากกา */
+    for (var sp2 = 0; sp2 < 2600; sp2++) {
+      var age = t - SPK_BORN[sp2];
+      var life = 0.9 + 0.9 * SPK[sp2 * 5 + 1];
+      if (age <= 0 || age >= life) continue;
+      var aa = SPK[sp2 * 5 + 2] * TAU;
+      var vx = Math.cos(aa) * (0.4 + 0.6 * SPK[sp2 * 5 + 3]);
+      var vy = 0.5 + 0.9 * SPK[sp2 * 5 + 4];
+      var vz = Math.sin(aa) * (0.4 + 0.6 * SPK[sp2 * 5 + 3]);
+      var idx2 = SPK_IDX[sp2] * 3;
+      var glow = Math.pow(clip01(1 - age / life), 1.3) * (0.6 + 0.4 * Math.sin(age * 30 + aa));
+      emit(RP[idx2] + vx * age, RP[idx2 + 1] + vy * age - 0.5 * 2.2 * age * age, RP[idx2 + 2] + vz * age,
+        glow, SPK[sp2 * 5 + 3] > 0.7 ? GLINT : DUST, -1);
+    }
+
+    /* วงแหวนแสงตอนวาดเสร็จ */
+    var bk = t - DRAW1 - 0.1;
+    if (bk >= 0 && bk <= 2.2) {
+      for (var bu = 0; bu < 700; bu++) {
+        var ba = BURST[bu * 3] * TAU;
+        var br = 0.85 + 2.4 * (1 - Math.exp(-bk * 2.0)) * (0.97 + 0.06 * BURST[bu * 3 + 1]);
+        var bglow = Math.pow(clip01(1 - bk / 2.2), 1.5);
+        var b2 = BURST[bu * 3 + 1];
+        var btag = b2 < 0.25 ? FIRE_R : b2 < 0.45 ? FIRE_B : b2 < 0.6 ? FIRE_G : GLINT;
+        emit(Math.cos(ba) * br, 0.42 + Math.sin(ba) * br, (BURST[bu * 3 + 2] - 0.5) * 0.05 - 0.4, bglow, btag, -1);
+      }
+    }
+
+    /* วงโคจรทองสองวง */
+    var hon = smooth((t - DRAW1 - 0.3) / 1.5);
+    if (hon > 0) {
+      var hn = 450;
+      for (var hi = 0; hi < 2; hi++) {
+        var tilt = hi === 0 ? 0.55 : -0.55;
+        var ct = Math.cos(tilt), stt = Math.sin(tilt);
+        for (var hj = 0; hj < hn; hj++) {
+          var hIndex = hi * hn + hj;
+          var ha = HALO[hIndex * 2] * TAU + t * (hi === 0 ? 0.9 : -0.7);
+          var hx = Math.cos(ha) * 1.05, hy = Math.sin(ha) * 0.32, hz = Math.sin(ha) * 0.95;
+          var hhead = (HALO[hIndex * 2] * 37 + t * 1.3) % 1.0;
+          var hglow = hon * (0.15 + 0.85 * clip01(1 - hhead * 3)) * (0.6 + 0.4 * Math.sin(t * 6 + HALO[hIndex * 2 + 1] * TAU));
+          emit(hx * ct - hy * stt, hx * stt + hy * ct + 0.42, hz, hglow,
+            HALO[hIndex * 2 + 1] > 0.5 ? DUST : GLINT, -1);
+        }
+      }
+    }
+  }
+
+  /* ================= 6. กริด → ตัวอักษร ================= */
+  function outlineLetter(gx, gy) {
+    var ax = Math.abs(gx), ay = Math.abs(gy);
+    if (ax + ay === 0) return AT['+'];
+    if (ax > 2 * ay) return AT['|'];
+    if (ay > 2 * ax) return gy > 0 ? AT['_'] : AT['-'];
+    return gx * gy > 0 ? AT['/'] : AT['\\'];
+  }
+
+  var hTable = new Int32Array(NCELL);
+  for (var r0 = 0; r0 < ROWS; r0++) {
+    for (var c0 = 0; c0 < COLS; c0++) {
+      hTable[r0 * COLS + c0] = (r0 * 7919 + c0 * 104729) % 9973;
+    }
+  }
+
+  function buildChars(t) {
+    var body = 0, i3, i4;
+    for (i3 = 0; i3 < NCELL; i3++) {
+      charIdx[i3] = 0;
+      charLum[i3] = 0;
+      cellBody[i3] = cellPart[i3] >= 0 ? 1 : 0;
+      if (cellBody[i3]) body++;
+    }
+
+    for (var r1 = 0; r1 < ROWS; r1++) {
+      for (var c1 = 0; c1 < COLS; c1++) {
+        i4 = r1 * COLS + c1;
+        if (!cellBody[i4]) continue;
+        var gx = 0, gy = 0, edge = 0;
+        var part = cellPart[i4], depth = cellZ[i4];
+        for (var dy2 = -1; dy2 <= 1; dy2++) {
+          for (var dx2 = -1; dx2 <= 1; dx2++) {
+            if (!dx2 && !dy2) continue;
+            var rr2 = r1 + dy2, cc2 = c1 + dx2;
+            var npart = -1, ndepth = 99;
+            if (rr2 >= 0 && rr2 < ROWS && cc2 >= 0 && cc2 < COLS) {
+              npart = cellPart[rr2 * COLS + cc2];
+              ndepth = cellZ[rr2 * COLS + cc2];
+            }
+            var out = (npart < 0) || (npart !== part && ndepth > depth + 0.02);
+            if (out) {
+              gx += dx2; gy += dy2;
+              if (!dx2 || !dy2) edge = 1;
+            }
+          }
+        }
+        var h = hTable[i4];
+        var lum = cellLum[i4];
+        var lvl = Math.min(3, Math.max(0, (lum * 3.2) | 0));
+        var ch = edge ? outlineLetter(gx, gy) : FILL[lvl][(h + Math.floor(t * 4 + h % 11)) % 12];
+        var tg = cellTag[i4];
+        if (tg === GLINT || tg === FIRE_R || tg === FIRE_B || tg === FIRE_G) ch = AT['*'];
+        charIdx[i4] = ch;
+        charLum[i4] = edge ? Math.max(0.75, lum) : Math.min(1, Math.max(0.3, lum));
+      }
+    }
+
+    /* อนุภาค + เงาสะท้อน + ดาว */
+    for (i3 = 0; i3 < NCELL; i3++) {
+      if (cellBody[i3] || cellLum[i3] <= 0.02) continue;
+      var r3 = (i3 / COLS) | 0, c3 = i3 % COLS;
+      var fs = cellLum[i3], ft = cellTag[i3], letter;
+      if (ft === REFL) letter = FILL[Math.min(1, Math.max(0, (fs * 6) | 0))][(r3 * 31 + c3) % 12];
+      else if (ft === DUST) letter = fs > 0.7 ? AT['*'] : fs > 0.35 ? AT['+'] : AT['.'];
+      else if (ft === STAR) letter = AT['.'];
+      else letter = (r3 + c3) % 3 === 0 ? AT['&'] : (r3 + c3) % 3 === 1 ? AT['8'] : AT['%'];
+      charIdx[i3] = letter;
+      charLum[i3] = Math.min(1, fs);
+    }
+
+    /* รังสีจากประกายที่สว่างที่สุด */
+    var best = [];
+    for (i3 = 0; i3 < NCELL; i3++) {
+      if (!cellBody[i3]) continue;
+      var tg2 = cellTag[i3];
+      if (tg2 !== GLINT && tg2 !== FIRE_R && tg2 !== FIRE_B && tg2 !== FIRE_G) continue;
+      best.push([cellLum[i3] + (hTable[i3] % 7) * 0.01, i3]);
+    }
+    best.sort(function (a2, b2) { return b2[0] - a2[0]; });
+    var limit = Math.min(6, best.length);
+    for (var n2 = 0; n2 < limit; n2++) {
+      if (best[n2][0] <= 0) break;
+      var idx3 = best[n2][1];
+      var cy4 = (idx3 / COLS) | 0, cx4 = idx3 % COLS;
+      var pulse = 0.5 + 0.5 * Math.sin(t * 7 + n2 * 1.7);
+      var reach = (5 + 9 * pulse) | 0;
+      for (var dist = 1; dist <= reach; dist++) {
+        var fade = 1 - dist / (reach + 1);
+        var dirs = [[0, 1, '-'], [0, -1, '-'], [1, 0, '|'], [-1, 0, '|']];
+        for (var dq = 0; dq < 4; dq++) {
+          var yy4 = cy4 + dirs[dq][0] * dist, xx4 = cx4 + dirs[dq][1] * dist * 2;
+          if (yy4 < 0 || yy4 >= ROWS || xx4 < 0 || xx4 >= COLS) continue;
+          var cell4 = yy4 * COLS + xx4;
+          if (charLum[cell4] < fade) {
+            charIdx[cell4] = AT[dirs[dq][2]];
+            charLum[cell4] = fade;
+            cellTag[cell4] = GLINT;
+          }
+        }
+        if (dist <= reach >> 1) {
+          var diag = [[1, 1, '\\'], [-1, -1, '\\'], [1, -1, '/'], [-1, 1, '/']];
+          for (var dq2 = 0; dq2 < 4; dq2++) {
+            var yy5 = cy4 + diag[dq2][0] * dist, xx5 = cx4 + diag[dq2][1] * dist;
+            if (yy5 < 0 || yy5 >= ROWS || xx5 < 0 || xx5 >= COLS) continue;
+            var cell5 = yy5 * COLS + xx5;
+            if (charLum[cell5] < fade * 0.7) {
+              charIdx[cell5] = AT[diag[dq2][2]];
+              charLum[cell5] = fade * 0.7;
+              cellTag[cell5] = GLINT;
+            }
+          }
+        }
+      }
+      charIdx[cy4 * COLS + cx4] = AT['*'];
+      charLum[cy4 * COLS + cx4] = 1;
+    }
+    bodyCount = body;
+  }
+
+  /* ================= 7. ผัง glyph ================= */
+  var GLYPH = [];
+  (function buildGlyphs() {
+    var tmpC = document.createElement('canvas');
+    tmpC.width = CW; tmpC.height = CH;
+    var tc = tmpC.getContext('2d', { willReadFrequently: true });
+    var font = Math.round(CH * 0.95) + 'px ui-monospace, "SF Mono", Consolas, "Cascadia Mono", Menlo, monospace';
+    for (var gi = 0; gi < CHARS.length; gi++) {
+      tc.clearRect(0, 0, CW, CH);
+      tc.font = font;
+      tc.textAlign = 'center';
+      tc.textBaseline = 'middle';
+      tc.fillStyle = '#fff';
+      tc.fillText(CHARS.charAt(gi), CW / 2, CH / 2 + 0.5);
+      var d = tc.getImageData(0, 0, CW, CH).data;
+      var a = new Uint8Array(CW * CH);
+      for (var p2 = 0; p2 < CW * CH; p2++) a[p2] = d[p2 * 4 + 3];
+      GLYPH.push(a);
+    }
+  })();
+
+  /* ================= 8. วาดลงพิกเซล ================= */
+  var cv = document.getElementById('stage');
+  cv.width = PW; cv.height = PH;
+  var vctx = cv.getContext('2d');
+
+  var frameCv = document.createElement('canvas');
+  frameCv.width = PW; frameCv.height = PH;
+  var fctx = frameCv.getContext('2d');
+  var fdata = fctx.createImageData(PW, PH);
+
+  var trailCv = document.createElement('canvas');
+  trailCv.width = PW; trailCv.height = PH;
+  var tctx = trailCv.getContext('2d');
+
+  var glowCv = document.createElement('canvas');
+  glowCv.width = PW / 4; glowCv.height = PH / 4;
+  var gctx = glowCv.getContext('2d');
+
+  function compose() {
+    var buf = fdata.data;
+    buf.fill(0);
+    for (var r5 = 0; r5 < ROWS; r5++) {
+      var rowCell = r5 * COLS;
+      for (var c5 = 0; c5 < COLS; c5++) {
+        var idx5 = rowCell + c5;
+        var ch5 = charIdx[idx5];
+        if (!ch5) continue;
+        var gl = GLYPH[ch5];
+        var lum5 = charLum[idx5];
+        if (lum5 <= 0) continue;
+        var tg5 = cellTag[idx5];
+        var col = COLORS[tg5 < 0 ? 0 : tg5 > 9 ? 9 : tg5];
+        var cr = col[0] * Math.min(1, lum5) * 255;
+        var cg = col[1] * Math.min(1, lum5) * 255;
+        var cbb = col[2] * Math.min(1, lum5) * 255;
+        var px0 = c5 * CW, py0 = r5 * CH;
+        for (var gy2 = 0; gy2 < CH; gy2++) {
+          var base1 = py0 + gy2;
+          var offPix = (base1 * PW + px0) * 4;
+          var offGly = gy2 * CW;
+          for (var gx2 = 0; gx2 < CW; gx2++) {
+            var av = gl[offGly + gx2];
+            if (!av) continue;
+            var o4 = offPix + gx2 * 4;
+            buf[o4] = (cr * av) / 255;
+            buf[o4 + 1] = (cg * av) / 255;
+            buf[o4 + 2] = (cbb * av) / 255;
+            buf[o4 + 3] = 255;
+          }
+        }
+      }
+    }
+    fctx.putImageData(fdata, 0, 0);
+
+    /* trail: จางลงครึ่งหนึ่งแล้วรวมเฟรมใหม่ */
+    tctx.globalCompositeOperation = 'source-over';
+    tctx.fillStyle = 'rgba(0,0,0,0.5)';
+    tctx.fillRect(0, 0, PW, PH);
+    tctx.globalCompositeOperation = 'lighter';
+    tctx.drawImage(frameCv, 0, 0);
+    tctx.globalCompositeOperation = 'source-over';
+
+    /* แสดงผล + glow (เบลอที่ขนาดเล็กแล้วขยายขึ้น จึงเร็ว) */
+    vctx.clearRect(0, 0, PW, PH);
+    vctx.globalCompositeOperation = 'lighter';
+
+    /* รวม glow สองรัศมีไว้ในภาพเล็กใบเดียว แล้วขยายครั้งเดียว */
+    gctx.clearRect(0, 0, glowCv.width, glowCv.height);
+    gctx.globalCompositeOperation = 'lighter';
+    gctx.filter = 'blur(4px)';
+    gctx.globalAlpha = 0.6;
+    gctx.drawImage(trailCv, 0, 0, glowCv.width, glowCv.height);
+    gctx.filter = 'blur(1.2px)';
+    gctx.globalAlpha = 0.85;
+    gctx.drawImage(trailCv, 0, 0, glowCv.width, glowCv.height);
+    gctx.filter = 'none';
+    gctx.globalAlpha = 1;
+    gctx.globalCompositeOperation = 'source-over';
+
+    vctx.globalAlpha = 1;
+    vctx.drawImage(glowCv, 0, 0, PW, PH);
+    vctx.drawImage(trailCv, 0, 0);
+    vctx.globalCompositeOperation = 'source-over';
+  }
+
+  /* ================= 9. ลูป ================= */
+  var t = 0, paused = false;
+  var clockEl = document.getElementById('clock');
+  var statEl = document.getElementById('stat');
+  var last = performance.now(), acc = 0, frames = 0, fpsT = last, fps = 0;
+  var prof = { scene: 0, chars: 0, compose: 0 };
+
+  function step(now) {
+    requestAnimationFrame(step);
+    var dt = (now - last) / 1000;
+    last = now;
+    if (dt > 0.25) dt = 0.25;
+    acc += dt;
+    if (acc < 1 / 30) return;
+    acc = 0;
+
+    if (!paused) {
+      t += Math.min(dt, 1 / 15);
+      if (t > LOOP) { t = 0; tctx.clearRect(0, 0, PW, PH); }
+    }
+
+    var p0 = performance.now();
+    scene(t);
+    var p1 = performance.now();
+    buildChars(t);
+    var p2 = performance.now();
+    compose();
+    var p3 = performance.now();
+    prof.scene = prof.scene * 0.9 + (p1 - p0) * 0.1;
+    prof.chars = prof.chars * 0.9 + (p2 - p1) * 0.1;
+    prof.compose = prof.compose * 0.9 + (p3 - p2) * 0.1;
+
+    frames++;
+    if (now - fpsT > 600) { fps = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; }
+    clockEl.textContent = 't ' + t.toFixed(2) + 's';
+    statEl.textContent = 'rotation ' + deg.toFixed(2) + '° · glints ' + glints + ' · letters ' + bodyCount;
+  }
+
+  window.__ring = function () {
+    return { t: +t.toFixed(2), fps: fps, deg: Math.round(deg), glints: glints, letters: bodyCount, paused: paused,
+      ms: { scene: +prof.scene.toFixed(1), chars: +prof.chars.toFixed(1), compose: +prof.compose.toFixed(1) } };
+  };
+
+  document.body.addEventListener('click', function () { paused = !paused; });
+  window.addEventListener('keydown', function (ev) {
+    if (ev.code === 'Space') { ev.preventDefault(); paused = !paused; }
+    if (ev.key === 'r' || ev.key === 'R') { t = 0; tctx.clearRect(0, 0, PW, PH); }
+  });
+
+  requestAnimationFrame(step);
+})();
+</script>
+</body>
+</html>
